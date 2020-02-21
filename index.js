@@ -1,4 +1,4 @@
-const bodyParser = require("body-parser");
+//const bodyParser = require("body-parser");
 const Constants = require("./constants");
 const express = require('express');
 const app = express();
@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static('public'));
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 app.get("/api/soundtracks", (req, res) => SendResponse(res, 200, Constants.Soundtracks));
 
@@ -30,7 +30,7 @@ app.use((error, req, res, next) => {
     next();
 });
 
-app.listen(port, "0.0.0.0", () => console.log('Gideon server listening on port ' + port + '!'));
+app.listen(port, "0.0.0.0", () => console.log(`Server listening on port ${port}`));
 
 /**
  * @param {Response} res 
