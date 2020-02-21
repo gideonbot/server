@@ -1,6 +1,9 @@
+require('dotenv').config();
 //const bodyParser = require("body-parser");
 const Constants = require("./constants");
 const express = require('express');
+const Util = require("./Util");
+const git = require("git-last-commit");
 const app = express();
 const port = 80;
 
@@ -26,11 +29,24 @@ app.all("*", (req, res) => SendResponse(res, req.method == "GET" || req.method =
 
 app.use((error, req, res, next) => {
     console.log("An error occurred while serving `" + req.path + "` to " + IPFromRequest(req) + ": " + error.stack);
+    Util.log("An error occurred while serving `" + req.path + "` to " + IPFromRequest(req) + ": " + error.stack);
     SendResponse(res, error.stack.toLowerCase().includes("JSON.parse") || error.stack.toLowerCase().includes("URIError") ? 400 : 500);
     next();
 });
 
-app.listen(port, "0.0.0.0", () => console.log(`Server listening on port ${port}`));
+app.listen(port, "0.0.0.0", () => {
+    console.log(`Server listening on port ${port}`)
+
+    git.getLastCommit((err, commit) => {
+        if (err) {
+            console.log(err);
+            Util.log("Couldn't fetch last commit: " + err);
+            return;
+        }
+    
+        Util.log(`Server listening on port ${port}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttp://gideonbot.co.vu`);
+    });
+});
 
 /**
  * @param {Response} res 
