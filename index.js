@@ -1,6 +1,7 @@
 require('dotenv').config();
-//const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const Constants = require("./constants");
+const crypto = require("crypto");
 const express = require('express');
 const http = require("http");
 const https = require('https');
@@ -66,13 +67,35 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static('public'));
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 app.get("/api", (req, res) => Util.SendResponse(res, 200, Constants.API));
 app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
 app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
 app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
 app.get("/api/abilities", (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
+
+app.post("/api/github", (req, res) => {
+    const secret = process.env.GITHUB_SECRET;
+    if (!secret) return Util.SendResponse(res, 501);
+
+    let body = req.body;
+    if (!body) return Util.SendResponse(res, 400);
+
+    let github_secret = req.get("x-hub-signature");
+    if (!github_secret) return Util.SendResponse(401);
+
+    const hmac = crypto.createHmac("sha1", secret);
+    const digest = Buffer.from("sha1=" + hmac.update(body).digest("hex"), "utf8");
+    const checksum = Buffer.from(github_secret, "utf8");
+
+    if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) return Util.SendResponse(res, 401);
+
+    if (body.action == "completed" && body.check_run && body.check_run.conclusion == "success") {
+        console.log("Detected success for " + body.repository.name);
+        Util.log("Detected success for " + body.repository.name);
+    }
+});
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
 
