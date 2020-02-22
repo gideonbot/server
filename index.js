@@ -52,6 +52,6 @@ https.createServer({
             return;
         }
     
-        Util.log(`Server listening on port \`${port}\`, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttp://gideonbot.co.vu`);
+        Util.log(`Server listening on port \`${port}\`, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
     });
 });
