@@ -95,6 +95,8 @@ app.post("/api/github", (req, res) => {
         console.log("Detected success for " + body.repository.name);
         Util.log("Detected success for " + body.repository.name);
     }
+
+    Util.SendResponse(res, 204);
 });
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
