@@ -104,7 +104,7 @@ app.post("/api/github", (req, res) => {
             console.log("CI build passed successfully for " + repo);
             Util.log("CI build passed successfully for `" + repo + "`");
     
-            let path = repo == "server" ? "./" : repo == "web" ? "./public" : "../" + repo;
+            let path = repo == "server" ? "./" : "../" + repo;
             exec("git pull", {cwd: path}, error => {
                 if (error) {
                     console.log(error);
@@ -115,13 +115,13 @@ app.post("/api/github", (req, res) => {
     }
 
     else if (req.get("x-github-event") == "push") {
-        console.log("Push for " + repo);
+        console.log("Push detected for " + repo);
         Util.log("Push detected for `" + repo + "`");
 
         let path = repo == "web" ? "./public" : null;
         if (!path) {
-            console.log("Unknown repo @push: " + repo);
-            Util.log("Unknown repo @push: `" + repo + "`");
+            console.log("Unknown repo at push: " + repo);
+            Util.log("Unknown repo at push: `" + repo + "`");
             return;
         }
 
