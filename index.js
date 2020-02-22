@@ -29,10 +29,12 @@ git.getLastCommit((err, commit) => {
     Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
 });
 
-http_server.listen(http_port, "0.0.0.0", () => {
-    console.log(`HTTP server listening on port ${http_port}`);
-    Util.log(`HTTP server listening on port \`${http_port}\``);
-});
+if (!process.env.CI) {
+    http_server.listen(http_port, "0.0.0.0", () => {
+        console.log(`HTTP server listening on port ${http_port}`);
+        Util.log(`HTTP server listening on port \`${http_port}\``);
+    });
+}
 
 if (supports_https) {
     https_server = https.createServer({
