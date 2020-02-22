@@ -1,6 +1,7 @@
 require('dotenv').config();
 const bodyParser = require("body-parser");
 const Constants = require("./constants");
+const exec = require("child_process").exec;
 const crypto = require("crypto");
 const express = require('express');
 const http = require("http");
@@ -91,12 +92,24 @@ app.post("/api/github", (req, res) => {
 
     if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) return Util.SendResponse(res, 401);
 
-    if (body.action == "completed" && body.check_run && body.check_run.conclusion == "success") {
-        console.log("Detected success for " + body.repository.name);
-        Util.log("Detected success for " + body.repository.name);
-    }
-
+    //we send response and then handle our thing (connection would end abruptly if we updated during request)
     Util.SendResponse(res, 204);
+
+    if (body.action == "completed" && body.check_run && body.check_run.conclusion == "success") {
+        let repo = body.repository.name;
+
+        console.log("Github Actions successfully finished for " + repo);
+        Util.log("Github Actions successfully finished for " + repo);
+
+        let path = repo == "server" ? "./" : "../" + repo;
+        console.log("Doing git pull in " + path);
+        exec("git pull", {cwd: path}, error => {
+            if (error) {
+                console.log(error);
+                Util.log("Error while syncing repo: " + error);
+            }
+        });
+    }
 });
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
