@@ -4,7 +4,6 @@ const Constants = require("./constants");
 const express = require('express');
 const https = require('https');
 const Util = require("./Util");
-const path = require("path")
 const git = require("git-last-commit");
 const fs = require('fs');
 const app = express();
@@ -38,8 +37,8 @@ app.use((error, req, res, next) => {
 });
 
 https.createServer({
-    key: fs.readFileSync(path.resolve(__dirname, "./privkey.pem")),
-    cert: fs.readFileSync(path.resolve(__dirname, "./fullchain.pem")),
+    key: fs.readFileSync('/etc/letsencrypt/live/site/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/site/fullchain.pem'),
     passphrase: process.env.PASSPHRASE
 }, app).listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`)
