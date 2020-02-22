@@ -24,12 +24,12 @@ git.getLastCommit((err, commit) => {
         return;
     }
 
-    Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & ' + https_port : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
+    Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
 });
 
 http_server.listen(http_port, "0.0.0.0", () => {
     console.log(`HTTP server listening on port ${http_port}`);
-    Util.log(`HTTP server listening on port ${http_port}`);
+    Util.log(`HTTP server listening on port \`${http_port}\``);
 });
 
 if (supports_https) {
@@ -42,7 +42,7 @@ if (supports_https) {
 
     https_server.listen(https_port, "0.0.0.0", () => {
         console.log(`HTTPS server listening on port ${https_port}`);
-        Util.log(`HTTPS server listening on port ${https_port}`);
+        Util.log(`HTTPS server listening on port \`${https_port}\``);
     });
 }
 
@@ -68,6 +68,7 @@ app.use((req, res, next) => {
 app.use(express.static('public'));
 //app.use(bodyParser.json());
 
+app.get("/api", (req, res) => Util.SendResponse(res, 200, Constants.API));
 app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
 app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
 app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
