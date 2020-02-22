@@ -2,10 +2,12 @@ require('dotenv').config();
 //const bodyParser = require("body-parser");
 const Constants = require("./constants");
 const express = require('express');
+const https = require('https');
 const Util = require("./Util");
 const git = require("git-last-commit");
+const fs = require('fs');
 const app = express();
-const port = 80;
+const port = 443;
 
 app.set("env", "production");
 app.set("x-powered-by", false);
@@ -34,7 +36,11 @@ app.use((error, req, res, next) => {
     next();
 });
 
-app.listen(port, "0.0.0.0", () => {
+https.createServer({
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
+    passphrase: process.env.PASSPHRASE
+}, app).listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`)
 
     git.getLastCommit((err, commit) => {
@@ -44,6 +50,6 @@ app.listen(port, "0.0.0.0", () => {
             return;
         }
     
-        Util.log(`Server listening on port ${port}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttp://gideonbot.co.vu`);
+        Util.log(`Server listening on port \`${port}\`, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttp://gideonbot.co.vu`);
     });
 });
