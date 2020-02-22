@@ -38,9 +38,9 @@ app.use((error, req, res, next) => {
 });
 
 https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/site/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/site/fullchain.pem'),
-    passphrase: process.env.PASSPHRASE
+    key: fs.readFileSync('./server-key.pem'), 
+    cert: fs.readFileSync('./server-crt.pem'), 
+    ca: fs.readFileSync('./ca-crt.pem')
 }, app).listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`)
 
