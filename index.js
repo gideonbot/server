@@ -26,6 +26,9 @@ app.use(express.static('public'));
 //app.use(bodyParser.json());
 
 app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
+app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
+app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
+app.get("/api/abilities", (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
 
