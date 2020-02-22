@@ -83,7 +83,7 @@ app.post("/api/github", (req, res) => {
     if (!body) return Util.SendResponse(res, 400);
 
     let github_secret = req.get("x-hub-signature");
-    if (!github_secret) return Util.SendResponse(401);
+    if (!github_secret) return Util.SendResponse(res, 401);
 
     const hmac = crypto.createHmac("sha1", secret);
     const digest = Buffer.from("sha1=" + hmac.update(body).digest("hex"), "utf8");
