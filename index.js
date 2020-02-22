@@ -9,6 +9,7 @@ const https = require('https');
 const Util = require("./Util");
 const git = require("git-last-commit");
 const fs = require('fs');
+const Z = require("uete");
 
 const app = express();
 const http_port = 80;
@@ -29,7 +30,6 @@ git.getLastCommit((err, commit) => {
     Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
 });
 
-console.log(process.env.CI);
 if (!process.env.CI) {
     http_server.listen(http_port, "0.0.0.0", () => {
         console.log(`HTTP server listening on port ${http_port}`);
