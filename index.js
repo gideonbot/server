@@ -101,7 +101,7 @@ app.post("/api/github", (req, res) => {
         let repo = body.repository.name;
 
         console.log("CI build passed successfully for " + repo);
-        Util.log("CI build passed successfullyfor " + repo);
+        Util.log("CI build passed successfully for " + repo);
 
         let path = repo == "server" ? "./" : "../" + repo;
         console.log("Doing git pull in " + path);
