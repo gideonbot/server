@@ -9,7 +9,6 @@ const https = require('https');
 const Util = require("./Util");
 const git = require("git-last-commit");
 const fs = require('fs');
-const Z = require("uete");
 
 const app = express();
 const http_port = 80;
@@ -122,4 +121,24 @@ app.use((error, req, res, next) => {
     Util.log("An error occurred while serving `" + req.path + "` to " + Util.IPFromRequest(req) + ": " + error.stack);
     Util.SendResponse(res, error.stack.toLowerCase().includes("JSON.parse") || error.stack.toLowerCase().includes("URIError") ? 400 : 500);
     next();
+});
+
+process.on("uncaughtException", err => {
+    console.log(err);
+    Util.log("Uncaught Exception: " + err.stack);
+
+    if (process.env.CI) {
+        console.log("Exception detected, marking as failed");
+        process.exit(1);
+    }
+});
+
+process.on("unhandledRejection", err => {
+    console.log(err);
+    Util.log("Unhandled Rejection: " + err.stack + "\n\nJSON: " + JSON.stringify(err, null, 2));
+
+    if (process.env.CI) {
+        console.log("Unhandled Rejection detected, marking as failed");
+        process.exit(1);
+    }
 });
