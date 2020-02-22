@@ -20,7 +20,7 @@ jobs:
       run: npm install
       
     - name: Run test
-      run: sudo npm test
+      run: npm test
       
     env:
       CI: true
