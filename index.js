@@ -101,7 +101,7 @@ app.post("/api/github", (req, res) => {
         let repo = body.repository.name;
 
         console.log("Github Actions successfully finished for " + repo);
-        Util.log("Github Actions successfully finished for `" + repo + "`");
+        Util.log("Github Actions successfully finished for " + repo);
 
         let path = repo == "server" ? "./" : "../" + repo;
         console.log("Doing git pull in " + path);
