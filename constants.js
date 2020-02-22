@@ -452,7 +452,7 @@ module.exports.Speedsters = {
     "image": "https://vignette.wikia.nocookie.net/arrow/images/6/67/XS.png/revision/latest/scale-to-width-down/350?cb=20181102205101"
     }
 
-module.exports.titleilities = {
+module.exports.Abilities = {
     speedsters: {
         title1: "",
         ability1: "",
@@ -470,10 +470,11 @@ module.exports.titleilities = {
         title4: "",
         title5: "",
         title6: "",
-    },
-    kryptonians: {
-        title1: "https://open.spotify.com/album/0jSqj8Tr0BrQIdqV4DZ9jD",
-        title2: "https://open.spotify.com/album/7x4PDyJb3FJoYkRnF2hu2K",
-        title3: "https://open.spotify.com/album/6zXns0k78HUh5UlNprKhvf",
+    }
+}
+
+module.exports.API = {
+    API: {
+        status: "Gideon API Online and functional!"
     }
 }
