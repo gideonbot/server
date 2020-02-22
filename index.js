@@ -23,14 +23,14 @@ app.use((req, res, next) => {
 app.use(express.static('public'));
 //app.use(bodyParser.json());
 
-app.get("/api/soundtracks", (req, res) => SendResponse(res, 200, Constants.Soundtracks));
+app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
 
-app.all("*", (req, res) => SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
+app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
 
 app.use((error, req, res, next) => {
-    console.log("An error occurred while serving `" + req.path + "` to " + IPFromRequest(req) + ": " + error.stack);
-    Util.log("An error occurred while serving `" + req.path + "` to " + IPFromRequest(req) + ": " + error.stack);
-    SendResponse(res, error.stack.toLowerCase().includes("JSON.parse") || error.stack.toLowerCase().includes("URIError") ? 400 : 500);
+    console.log("An error occurred while serving `" + req.path + "` to " + Util.IPFromRequest(req) + ": " + error.stack);
+    Util.log("An error occurred while serving `" + req.path + "` to " + Util.IPFromRequest(req) + ": " + error.stack);
+    Util.SendResponse(res, error.stack.toLowerCase().includes("JSON.parse") || error.stack.toLowerCase().includes("URIError") ? 400 : 500);
     next();
 });
 
@@ -47,27 +47,3 @@ app.listen(port, "0.0.0.0", () => {
         Util.log(`Server listening on port ${port}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttp://gideonbot.co.vu`);
     });
 });
-
-/**
- * @param {Response} res 
- * @param {Number} code 
- * @param {Object} object 
- */
-function SendResponse(res, code, obj = null, pretty = true) {
-    if (!res || !code) throw new Error("Invalid Args");
-    if (!(code in Constants.HTTP_Codes)) throw new Error(code + " is not a valid HTTP status code");
-
-    if (obj == null || obj == undefined) {
-        return res.status(code).set("Content-Type", "application/json").send(JSON.stringify({code: code, message: Constants.HTTP_Codes[code]}));
-    }
-    
-    return res.status(code).set("Content-Type", "application/json").send(JSON.stringify(obj, null, pretty ? 2 : 0));
-}
-
-function IPFromRequest(req) {
-    let IP = req.ip;
-    if (!IP) return "MISSING IP";
-
-    IP = IP.replace("::ffff:", "").replace("::1", "");
-    return !IP ? "127.0.0.1" : IP;
-}
