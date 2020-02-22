@@ -41,7 +41,8 @@ app.use((error, req, res, next) => {
 
 https.createServer({
     key: fs.readFileSync('privkey.pem', 'utf8'),
-    cert: fs.readFileSync('cert.pem', 'utf8')
+    cert: fs.readFileSync('cert.pem', 'utf8'),
+    ca: [fs.readFileSync('ca.crt', 'utf8')]
 }, app).listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`)
 
