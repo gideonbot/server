@@ -2,10 +2,12 @@ require('dotenv').config();
 //const bodyParser = require("body-parser");
 const Constants = require("./constants");
 const express = require('express');
+const https = require('https');
 const Util = require("./Util");
 const git = require("git-last-commit");
+const fs = require('fs');
 const app = express();
-const port = 80;
+const port = 443;
 
 app.set("env", "production");
 app.set("x-powered-by", false);
@@ -24,6 +26,9 @@ app.use(express.static('public'));
 //app.use(bodyParser.json());
 
 app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
+app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
+app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
+app.get("/api/abilities", (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
 
@@ -34,7 +39,11 @@ app.use((error, req, res, next) => {
     next();
 });
 
-app.listen(port, "0.0.0.0", () => {
+https.createServer({
+    key: fs.readFileSync('privkey.pem', 'utf8'),
+    cert: fs.readFileSync('cert.pem', 'utf8'),
+    ca: [fs.readFileSync('ca.crt', 'utf8')]
+}, app).listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`)
 
     git.getLastCommit((err, commit) => {
@@ -44,6 +53,6 @@ app.listen(port, "0.0.0.0", () => {
             return;
         }
     
-        Util.log(`Server listening on port ${port}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttp://gideonbot.co.vu`);
+        Util.log(`Server listening on port \`${port}\`, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
     });
 });

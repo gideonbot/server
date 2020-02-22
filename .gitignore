@@ -1,3 +1,5 @@
 .env
 .vscode
 node_modules/
+privkey.pem
+cert.pem
