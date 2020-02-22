@@ -98,8 +98,8 @@ app.post("/api/github", (req, res) => {
     if (body.action == "completed" && body.check_run && body.check_run.conclusion == "success") {
         let repo = body.repository.name;
 
-        console.log("Github Actions successfully finished for " + repo);
-        Util.log("Github Actions successfully finished for " + repo);
+        console.log("CI build passed successfully for " + repo);
+        Util.log("CI build passed successfullyfor " + repo);
 
         let path = repo == "server" ? "./" : "../" + repo;
         console.log("Doing git pull in " + path);
