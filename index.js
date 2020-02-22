@@ -23,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static('public'));
+console.log(fs.readdirSync("./"));
 //app.use(bodyParser.json());
 
 app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
