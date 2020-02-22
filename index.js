@@ -2,12 +2,49 @@ require('dotenv').config();
 //const bodyParser = require("body-parser");
 const Constants = require("./constants");
 const express = require('express');
+const http = require("http");
 const https = require('https');
 const Util = require("./Util");
 const git = require("git-last-commit");
 const fs = require('fs');
+
 const app = express();
-const port = 443;
+const http_port = 80;
+const https_port = 443;
+
+const supports_https = fs.existsSync('privkey.pem') && fs.existsSync('cert.pem') && fs.existsSync('ca.crt');
+
+let http_server = http.createServer(app);
+let https_server = https.createServer(app);
+
+git.getLastCommit((err, commit) => {
+    if (err) {
+        console.log(err);
+        Util.log("Couldn't fetch last commit: " + err);
+        return;
+    }
+
+    Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & ' + https_port : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
+});
+
+http_server.listen(http_port, "0.0.0.0", () => {
+    console.log(`HTTP server listening on port ${http_port}`);
+    Util.log(`HTTP server listening on port ${http_port}`);
+});
+
+if (supports_https) {
+    https_server = https.createServer({
+        key: fs.readFileSync('privkey.pem', 'utf8'),
+        cert: fs.readFileSync('cert.pem', 'utf8'),
+        ca: [fs.readFileSync('ca.crt', 'utf8')],
+        minVersion: "TLSv1.2"
+    }, app);
+
+    https_server.listen(https_port, "0.0.0.0", () => {
+        console.log(`HTTPS server listening on port ${https_port}`);
+        Util.log(`HTTPS server listening on port ${https_port}`);
+    });
+}
 
 app.set("env", "production");
 app.set("x-powered-by", false);
@@ -18,6 +55,12 @@ app.use((req, res, next) => {
     res.set("X-Content-Type-Options", "nosniff");
     res.set("X-Frame-Options", "SAMEORIGIN");
     res.set("X-XSS-Protection", "1; mode=block");
+
+    if (https_server.listening && !req.secure) {
+        //requests that send data HAVE to go through https
+        if (req.method != "GET" && req.method != "HEAD") return Util.SendResponse(res, 405);
+        return res.redirect(307, "https://gideonbot.co.vu" + req.url);
+    }
 
     next();
 });
@@ -37,22 +80,4 @@ app.use((error, req, res, next) => {
     Util.log("An error occurred while serving `" + req.path + "` to " + Util.IPFromRequest(req) + ": " + error.stack);
     Util.SendResponse(res, error.stack.toLowerCase().includes("JSON.parse") || error.stack.toLowerCase().includes("URIError") ? 400 : 500);
     next();
-});
-
-https.createServer({
-    key: fs.readFileSync('privkey.pem', 'utf8'),
-    cert: fs.readFileSync('cert.pem', 'utf8'),
-    ca: [fs.readFileSync('ca.crt', 'utf8')]
-}, app).listen(port, "0.0.0.0", () => {
-    console.log(`Server listening on port ${port}`)
-
-    git.getLastCommit((err, commit) => {
-        if (err) {
-            console.log(err);
-            Util.log("Couldn't fetch last commit: " + err);
-            return;
-        }
-    
-        Util.log(`Server listening on port \`${port}\`, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
-    });
 });
