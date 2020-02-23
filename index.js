@@ -96,15 +96,35 @@ app.post("/api/github", (req, res) => {
 
     //we send response and then handle our thing (connection would end abruptly if we updated during request)
     Util.SendResponse(res, 204);
+    
+    let repo = body.repository.name;
 
-    if (body.action == "completed" && body.check_run && body.check_run.conclusion == "success") {
-        let repo = body.repository.name;
+    if (body.action == "completed") {
+        if (body.check_run && body.check_run.conclusion == "success") {
+            console.log("CI build passed successfully for " + repo);
+            Util.log("CI build passed successfully for `" + repo + "`");
+    
+            let path = repo == "server" ? "./" : "../" + repo;
+            exec("git pull", {cwd: path}, error => {
+                if (error) {
+                    console.log(error);
+                    Util.log("Error while syncing repo: " + error);
+                }
+            });
+        }
+    }
 
-        console.log("CI build passed successfully for " + repo);
-        Util.log("CI build passed successfully for " + repo);
+    else if (req.get("x-github-event") == "push") {
+        console.log("Push detected for " + repo);
+        Util.log("Push detected for `" + repo + "`");
 
-        let path = repo == "server" ? "./" : "../" + repo;
-        console.log("Doing git pull in " + path);
+        let path = repo == "web" ? "./public" : null;
+        if (!path) {
+            console.log("Unknown repo at push: " + repo);
+            Util.log("Unknown repo at push: `" + repo + "`");
+            return;
+        }
+
         exec("git pull", {cwd: path}, error => {
             if (error) {
                 console.log(error);
