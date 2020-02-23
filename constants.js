@@ -1,31 +1,32 @@
 module.exports.Soundtracks = {
-    the_flash: {
-        title1: "https://open.spotify.com/album/0xiJwfDcZRQ77bsbjS9TF5",
-        title2: "https://open.spotify.com/album/2EE7W74Rk1LDHzbYC9js2Z",
-        title3: "https://open.spotify.com/album/0DCUAyJVmG1fNxkBaZqFLt",
-        title4: "https://open.spotify.com/album/12WS02J0JBAVeEGj6aJ7R8",
+    flash: {
+        season1: "https://open.spotify.com/album/0xiJwfDcZRQ77bsbjS9TF5",
+        season2: "https://open.spotify.com/album/2EE7W74Rk1LDHzbYC9js2Z",
+        season3: "https://open.spotify.com/album/0DCUAyJVmG1fNxkBaZqFLt",
+        season4: "https://open.spotify.com/album/12WS02J0JBAVeEGj6aJ7R8",
     },
     arrow: {
-        title1: "https://open.spotify.com/album/0Hsit07149488kiRI1UiaJ",
-        title2: "https://open.spotify.com/album/234N1BIHMSxaKSVAM0JrOC",
-        title3: "https://open.spotify.com/album/2SYmYystitleloAQkkr2TEncT",
-        title4: "https://open.spotify.com/album/1IA3XNL6kv5zOpFG18M1au",
-        title5: "https://open.spotify.com/album/7ivC8XKulyl3akjhiRtJjA",
-        title6: "https://open.spotify.com/album/2sT1ks3i5yn0ZAGGvZQv92",
+        season1: "https://open.spotify.com/album/0Hsit07149488kiRI1UiaJ",
+        season2: "https://open.spotify.com/album/234N1BIHMSxaKSVAM0JrOC",
+        season3: "https://open.spotify.com/album/2SYmYysseasonloAQkkr2TEncT",
+        season4: "https://open.spotify.com/album/1IA3XNL6kv5zOpFG18M1au",
+        season5: "https://open.spotify.com/album/7ivC8XKulyl3akjhiRtJjA",
+        season6: "https://open.spotify.com/album/2sT1ks3i5yn0ZAGGvZQv92",
     },
     supergirl: {
-        title1: "https://open.spotify.com/album/0jSqj8Tr0BrQIdqV4DZ9jD",
-        title2: "https://open.spotify.com/album/7x4PDyJb3FJoYkRnF2hu2K",
-        title3: "https://open.spotify.com/album/6zXns0k78HUh5UlNprKhvf",
+        season1: "https://open.spotify.com/album/0jSqj8Tr0BrQIdqV4DZ9jD",
+        season2: "https://open.spotify.com/album/7x4PDyJb3FJoYkRnF2hu2K",
+        season3: "https://open.spotify.com/album/6zXns0k78HUh5UlNprKhvf",
     },
-    legends_of_tomorrow: {
-        title1: "https://open.spotify.com/album/0ceTcs3rDUEiyzshxjJFdB",
-        title2: "https://open.spotify.com/album/4r6t4EyqVZskLi0jD9yOhU",
-        title3: "https://open.spotify.com/album/0FPZ6xZBcwsupOaxKULGAF",
+    lot: {
+        season1: "https://open.spotify.com/album/0ceTcs3rDUEiyzshxjJFdB",
+        season2: "https://open.spotify.com/album/4r6t4EyqVZskLi0jD9yOhU",
+        season3: "https://open.spotify.com/album/0FPZ6xZBcwsupOaxKULGAF",
     },
     crossovers: {
-        crossover_1: "https://open.spotify.com/album/7vs9fu0ORNPmV2opBjLu5z",
-        crossover_2: "https://open.spotify.com/album/1jFljSQGFqtKkFNURoEOeI",
+        crossover1: "https://open.spotify.com/album/4AtHQFEn8Qrp9aSSt0ehob", //Flash vs. Arrow
+        crossover2: "https://open.spotify.com/album/7vs9fu0ORNPmV2opBjLu5z", //Duet
+        crossover3: "https://open.spotify.com/album/1jFljSQGFqtKkFNURoEOeI", //COEX
     }
 }
 
