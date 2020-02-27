@@ -169,8 +169,5 @@ process.on("unhandledRejection", err => {
 function CheckCertificate() {
     Util.GetCertExpirationDays(hostname).then(days => {
         if (days <= 4) Util.log("Certificate will expire in less than 4 days!");
-    }, failed => {
-        console.log(failed);
-        Util.log("Failed to check certificate: " + failed)
-    });
+    }, failed => Util.log("Failed to check certificate: " + failed));
 }
