@@ -96,14 +96,14 @@ class Util {
                 }
             }
 
-            let client = require("tls").connect(port, {host: host, timeout: 5 * 1000});
+            let client = require("tls").connect(port, {host: host, timeout: 5e3});
 
             client.on("error", error => reject(error));
             client.on("timeout", () => reject(new Error("Host Timed Out")));
 
             client.on("session", () => {
                 let valid_to = new Date(client.getPeerCertificate().valid_to);
-                let days = Math.abs(new Date() - valid_to) / (1000 * 3600 * 24);
+                let days = (valid_to - Date.now()) / (1000 * 3600 * 24);
                 client.end();
                 resolve(days);
             });
