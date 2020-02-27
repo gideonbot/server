@@ -76,6 +76,40 @@ class Util {
         return res.status(code).set("Content-Type", "application/json").send(JSON.stringify(obj, null, pretty ? 2 : 0));
     }
 
+    /**
+     * @returns {Promise<number>}
+     * @param {string} host 
+     */
+    static GetCertExpirationDays(host) {
+        return new Promise((resolve, reject) => {
+            if (!host) return reject("No Host");
+
+            if (host.startsWith("http://")) return reject("Host Uses HTTP");
+            if (host.startsWith("https://")) host = host.replace("https://", "");
+
+            let port = 443;
+            if (host.includes(":")) {
+                let split = host.split(":");
+                if (split.length > 1) {
+                    host = split[0];
+                    if (!isNaN(split[split.length - 1])) port = Number(split[split.length - 1]); 
+                }
+            }
+
+            let client = require("tls").connect(port, {host: host, timeout: 5e3});
+
+            client.on("error", error => reject(error));
+            client.on("timeout", () => reject(new Error("Host Timed Out")));
+
+            client.on("session", () => {
+                let valid_to = new Date(client.getPeerCertificate().valid_to);
+                let days = (valid_to - Date.now()) / (1000 * 3600 * 24);
+                client.end();
+                resolve(days);
+            });
+        });
+    }
+
     static IPFromRequest(req) {
         let IP = req.ip;
         if (!IP) return "MISSING IP";

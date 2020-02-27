@@ -13,6 +13,7 @@ const fs = require('fs');
 const app = express();
 const http_port = 80;
 const https_port = 443;
+const hostname = "gideonbot.co.vu";
 
 const supports_https = fs.existsSync('privkey.pem') && fs.existsSync('cert.pem') && fs.existsSync('ca.crt');
 
@@ -26,7 +27,7 @@ git.getLastCommit((err, commit) => {
         return;
     }
 
-    Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://gideonbot.co.vu`);
+    Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://${hostname}`);
 });
 
 if (!process.env.CI) {
@@ -45,6 +46,8 @@ if (supports_https) {
     }, app);
 
     https_server.listen(https_port, "0.0.0.0", () => {
+        CheckCertificate();
+        setInterval(CheckCertificate, 1e3 * 60 * 60 * 2);
         console.log(`HTTPS server listening on port ${https_port}`);
         Util.log(`HTTPS server listening on port \`${https_port}\``);
     });
@@ -63,7 +66,7 @@ app.use((req, res, next) => {
     if (https_server.listening && !req.secure) {
         //requests that send data HAVE to go through https
         if (req.method != "GET" && req.method != "HEAD") return Util.SendResponse(res, 405);
-        return res.redirect(307, "https://gideonbot.co.vu" + req.url);
+        return res.redirect(307, `https://${hostname}${req.url}`);
     }
 
     next();
@@ -162,3 +165,9 @@ process.on("unhandledRejection", err => {
         process.exit(1);
     }
 });
+
+function CheckCertificate() {
+    Util.GetCertExpirationDays(hostname).then(days => {
+        if (days <= 4) Util.log("Certificate will expire in less than 4 days!");
+    }, failed => Util.log("Failed to check certificate: " + failed));
+}
