@@ -418,6 +418,6 @@ module.exports.Abilities = {
 
 module.exports.API = {
     API: {
-        status: "Gideon API Online and functional!"
+        status: "Gideon API online and functional!"
     }
 }
