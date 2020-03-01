@@ -1,5 +1,6 @@
 require('dotenv').config();
 const bodyParser = require("body-parser");
+const rateLimit = require("express-rate-limit");
 const Constants = require("./constants");
 const exec = require("child_process").exec;
 const crypto = require("crypto");
@@ -72,7 +73,13 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static('public'));
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100
+});
+
+app.use('/', express.static('public'));
+app.use("/api/", apiLimiter);
 app.use(bodyParser.json());
 
 app.get("/api", (req, res) => Util.SendResponse(res, 200, Constants.API));
@@ -108,7 +115,7 @@ app.post("/api/github", (req, res) => {
             Util.log("CI build passed successfully for `" + repo + "`");
     
             let path = repo == "server" ? "./" : "../" + repo;
-            exec("git pull", {cwd: path}, error => {
+            exec("rm package.json & rm package-lock.json & git pull", {cwd: path}, error => {
                 if (error) {
                     console.log(error);
                     Util.log("Error while syncing repo: " + error);
