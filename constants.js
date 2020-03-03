@@ -124,162 +124,133 @@ module.exports.Speedsters = [
         lightningColorsElectrokinesis: "Yellow (Speed Force) 🡒 Orange (+Speed)",
         universe: "Earth-1",
         actoractress: "Grant Gustin",
-        firstAppearance: "Arrow 2x08 \"The Scientist\"",
-        firstAppearanceAsSpeedster: "Flash 1x01 \"Pilot\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/9/90/The_Flash.png/revision/latest/scale-to-width-down/350?cb=20190327234611"
+        firstAppearanceAsSpeedster: "The Flash 1x01 \"Pilot\""
     },
     {
-        speedster: "The Reverse Flash (Eobard Thawne)",
+        speedster: "The Reverse-Flash (Eobard Thawne)",
         lightningColorsElectrokinesis: "Red (Negative Speed Force)",
         universe: "Earth-1",
         actoractress: "Tom Cavanagh / Matt Letscher",
-        firstAppearance: "Flash 1x01 \"Pilot\"",
-        firstAppearanceAsSpeedster: "Flash 1x06 \"The Flash Is Born\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/b/b3/Reverse-Flash.png/revision/latest/scale-to-width-down/350?cb=20190626233852"
+        firstAppearanceAsSpeedster: "The Flash 1x06 \"The Flash Is Born\""
     },
     {
         speedster: "Zoom / Black Flash (Hunter Zolomon)",
         lightningColorsElectrokinesis: "Yellow (Speed Force) 🡒 Blue (V6) 🡒 Red (Transformed)",
         universe: "Earth-2",
         actoractress: "Teddy Sears / Tony Todd",
-        firstAppearance: "Flash 2x01 \"The Man Who Saved Central City\"",
-        firstAppearanceAsSpeedster: "Flash 2x01 \"The Man Who Saved Central City\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/9/96/Zoom.png/revision/latest/scale-to-width-down/350?cb=20170728183556"
+        firstAppearanceAsSpeedster: "The Flash 2x01 \"The Man Who Saved Central City\" "
     },
     {
         speedster: "Savitar (Barry Allen - Time Remnant)",
         lightningColorsElectrokinesis: "Yellow (Speed Force) 🡒 White (Suit)",
         universe: "Earth-1",
         actoractress: "Grant Gustin / Tobin Bell",
-        firstAppearance: "The Flash 3x02 \"Paradox\" ",
-        firstAppearanceAsSpeedster: "The Flash 3x02 \"Paradox\"",
-        image: "https://www.monstersandcritics.com/wp-content/uploads/2017/04/flashSavitar-e1493137477278.png"
+        firstAppearanceAsSpeedster: "The Flash 3x02 \"Paradox\" "
     },
     {
         speedster: "Godspeed (August Heart)",
-        lightningColorsElectrokinesis: "White (Tachyons) / Blue Sparks (V9)",
+        lightningColorsElectrokinesis: "White (Speed Force) [Tachyons] / Blue Sparks (V9)",
         universe: "Earth-1",
         actoractress: "Kindall Charters / B.D. Wong",
-        firstAppearance: "The Flash 5x18 \"Godspeed\"",
-        firstAppearanceAsSpeedster: "The Flash 5x18 \"Godspeed\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/e/e3/Godspeed.png/revision/latest/scale-to-width-down/350?cb=20190418050140"
+        firstAppearanceAsSpeedster: "The Flash 5x18 \"Godspeed\""
     },
     {
-        speedster: "The Red Death (Bruce Wayne)",
-        lightningColorsElectrokinesis: "Red (Speed Force)",
-        universe: "Earth-52",
-        actoractress: "Unknown",
-        firstAppearance: "Unknown",
-        firstAppearanceAsSpeedster: "Unknown",
-        image: "https://fsmedia.imgix.net/28/97/95/4b/ec75/42a3/9517/b1682c837835/batman-the-red-death-1-cover-by-jason-ftitleok-and-dean-white.jpeg#image"
+        speedster: "G4 (Unnamed Godspeed)",
+        lightningColorsElectrokinesis: "White (Speed Force) [Clone]",
+        universe: "Earth-1",
+        actoractress: "Ryan Handley",
+        firstAppearanceAsSpeedster: "The Flash 6x01 \"Into The Void\""
     },
     {
         speedster: "Accelerated Man",
         lightningColorsElectrokinesis: "Purple (Speed Force)",
         universe: "Earth-19",
         actoractress: "Sean Poague",
-        firstAppearance: "Flash 3x14 \"Attack on Central City\"",
-        firstAppearanceAsSpeedster: "Flash 3x14 \"Attack on Central City\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/9/9a/Accelerated_Man.png/revision/latest/scale-to-width-down/350?cb=20170301042811"
+        firstAppearanceAsSpeedster: "The Flash 3x14 \"Attack on Central City\""
     },
     {
         speedster: "Jesse Quick (Jesse Chambers Wells)",
         lightningColorsElectrokinesis: "Yellow (Speed Force)",
         universe: "Earth-2",
         actoractress: "Violett Beane",
-        firstAppearance: "Flash 2x05 \"The Darkness and the Light\"",
-        firstAppearanceAsSpeedster: "Flash 3x03 \"Magenta\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/9/93/Jesse_Quick.png/revision/latest/scale-to-width-down/350?cb=20180310230252"
+        firstAppearanceAsSpeedster: "The Flash 3x03 \"Magenta\" "
     },
     {
         speedster: "The Flash (Jay Garrick)",
         lightningColorsElectrokinesis: "Orange (Speed Force)",
         universe: "Earth-3",
         actoractress: "John Wesley Shipp",
-        firstAppearance: "Flash 2x13 \"Welcome to Earth-2\"",
-        firstAppearanceAsSpeedster: "Flash 2x23 \"The Race of His Life\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/1/10/The_Flash_%28Jay_Garrick%29.png/revision/latest/scale-to-width-down/350?cb=20170107101535"
+        firstAppearanceAsSpeedster: "The Flash 2x23 \"The Race of His Life\" "
     },
     {
         speedster: "The Rival (Edward Clariss)",
-        lightningColorsElectrokinesis: "Red (Speed Force)",
+        lightningColorsElectrokinesis: "Red (Speed Force) [Philosopher's Stone]",
         universe: "Earth-1",
         actoractress: "Todd Lasance",
-        firstAppearance: "Flash 3x01 \"Flashpoint\"",
-        firstAppearanceAsSpeedster: "Flash 3x01 \"Flashpoint\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/e/ee/The_Rival.png/revision/latest/scale-to-width-down/350?cb=20161019195539"
+        firstAppearanceAsSpeedster: "The Flash 3x01 \"Flashpoint\" "
     },
     {
         speedster: "Trajectory (Eliza Harmon)",
         lightningColorsElectrokinesis: "Yellow (V9) 🡒 Blue (Overdose V9)",
         universe: "Earth-1",
         actoractress: "Allison Paige",
-        firstAppearance: "Flash 2x16 \"Trajectory\"",
-        firstAppearanceAsSpeedster: "Flash 2x16 \"Trajectory\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/8/87/Trajectory.png/revision/latest/scale-to-width-down/350?cb=20160323032622"
+        firstAppearanceAsSpeedster: "The Flash 2x16 \"Trajectory\" "
     },
     {
         speedster: "Music Meister",
         lightningColorsElectrokinesis: "Orange (Speed Force) [Stolen]",
         universe: "Unknown",
         actoractress: "Darren Criss",
-        firstAppearance: "Supergirl 2x16 \"Star-Crossed\"",
-        firstAppearanceAsSpeedster: "Flash 3x17 \"Duet\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/c/c6/Music_Meister.png/revision/latest/scale-to-width-down/350?cb=20170321032713"
+        firstAppearanceAsSpeedster: "The Flash 3x17 \"Duet\" "
     },
     {
         speedster: "The Flash (Oliver Queen)",
         lightningColorsElectrokinesis: "Orange (Speed Force) [Rewritten Reality]",
         universe: "Earth-1",
         actoractress: "Stephen Amell",
-        firstAppearance: "Arrow 1x01 \"Pilot\"",
-        firstAppearanceAsSpeedster: "Flash 5x09 \"Elseworlds, Part 1\"",
-        image: "https://imgix.bustle.com/uploads/image/2018/12/3/0a436c2f-571f-4de7-88fe-4d38728a0718-ar709b_0753b.jpg?w=970\u0026h=546\u0026fit=crop\u0026crop=faces\u0026auto=format\u0026q=70"
+        firstAppearanceAsSpeedster: "The Flash 5x09 \"Elseworlds, Part 1\" "
     },
     {
         speedster: "A.M.A.Z.O.",
         lightningColorsElectrokinesis: "Orange (Speed Force) [Copied]",
         universe: "Earth-1",
         actoractress: "CGI",
-        firstAppearance: "Flash 5x09 \"Elseworlds, Part 1\"",
-        firstAppearanceAsSpeedster: "Flash 5x09 \"Elseworlds, Part 1\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/d/da/A.M.A.Z.O..png/revision/latest/scale-to-width-down/350?cb=20190114052414"
+        firstAppearanceAsSpeedster: "The Flash 5x09 \"Elseworlds, Part 1\" "
     },
     {
         speedster: "The Flash (Barry Allen)",
         lightningColorsElectrokinesis: "Yellow (Speed Force)",
         universe: "Earth-90",
         actoractress: "John Wesley Shipp",
-        firstAppearance: "Flash 5x09 \"Elseworlds, Part 1\"",
-        firstAppearanceAsSpeedster: "Flash 5x09 \"Elseworlds, Part 1\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/2/26/The_Flash_%28Earth-90%29.png/revision/latest/scale-to-width-down/350?cb=20190316075355"
+        firstAppearanceAsSpeedster: "The Flash 5x09 \"Elseworlds, Part 1\" "
     },
     {
         speedster: "Kid Flash (Wally West)",
-        lightningColorsElectrokinesis: "Yellow (Speed Force)",
+        lightningColorsElectrokinesis: "Yellow (Speed Force) [Philosopher's Stone]",
         universe: "Earth-1",
         actoractress: "Keiynan Lonsdale",
-        firstAppearance: "Flash 2x09 \"Running to Stand Still\"",
-        firstAppearanceAsSpeedster: "Flash 3x01 \"Flashpoint\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/c/cf/Kid_Flash.png/revision/latest/scale-to-width-down/350?cb=20170526014156"
+        firstAppearanceAsSpeedster: "The Flash 3x01 \"Flashpoint\" "
     },
     {
         speedster: "The Flash (Iris West-Allen)",
         lightningColorsElectrokinesis: "Purple (Speed Force) [Melting Point]",
         universe: "Earth-1",
         actoractress: "Candice Patton",
-        firstAppearance: "Flash 1x01 \"Pilot\"",
-        firstAppearanceAsSpeedster: "Flash 4x16 \"Run Iris Run\"",
-        image: "https://akns-images.eonline.com/eol_images/Entire_Site/2018122/rs_634x1024-180222103245-634-candice-patton-flash-cw.png?fit=inside|900:auto\u0026output-quality=90"
+        firstAppearanceAsSpeedster: "The Flash 4x16 \"Run Iris Run\""
     },
     {
         speedster: "XS (Nora West-Allen)",
-        lightningColorsElectrokinesis: "Purple \u0026 Yellow (Speed Force) / Purple \u0026 Red (Negative Speed Force)",
+        lightningColorsElectrokinesis: "Purple & Yellow (Speed Force) / Purple & Red (Negative Speed Force)",
         universe: "Earth-1",
         actoractress: "Jessica Parker Kennedy",
-        firstAppearance: "Supergirl 3x08 \"Crisis on Earth-X, Part 1\"",
-        firstAppearanceAsSpeedster: "Flash 4x20 \"Therefore She Is\"",
-        image: "https://vignette.wikia.nocookie.net/arrow/images/6/67/XS.png/revision/latest/scale-to-width-down/350?cb=20181102205101"
+        firstAppearanceAsSpeedster: "The Flash 4x20 \"Therefore She Is\""
+    },
+    {
+        speedster: "The Flash (Gorilla Grodd)",
+        lightningColorsElectrokinesis: "Orange (Speed Force) [Mindscape Merge]",
+        universe: "Earth-Prime",
+        actoractress: "David Sobolov / Grant Gustin",
+        firstAppearanceAsSpeedster: "The Flash 6x13 \"Grodd Friended Me\""
     }
 ]
 
