@@ -81,12 +81,18 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next)=> {
+    Util.log(`New request:\`\`\`\nIP: ${req.ip} Method: ${req.method}\nURL: ${req.originalUrl} TLS: ${req.secure ? 'Yes' : 'No'}\n\nBody:\n${req.body}\n\`\`\``);
+    next();
+});
+
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100
 });
 
 app.use(cookieParser());
+app.use(functionmorgan('combined'))
 app.use('/', express.static('public'));
 app.use("/api/", apiLimiter);
 app.use(bodyParser.json());
