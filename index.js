@@ -92,7 +92,6 @@ const apiLimiter = rateLimit({
 });
 
 app.use(cookieParser());
-app.use(functionmorgan('combined'))
 app.use('/', express.static('public'));
 app.use("/api/", apiLimiter);
 app.use(bodyParser.json());
