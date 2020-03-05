@@ -157,25 +157,13 @@ app.post("/api/github", (req, res) => {
             });
         }
     }
+});
 
-    else if (req.get("x-github-event") == "push") {
-        console.log("Push detected for " + repo);
-        Util.log("Push detected for `" + repo + "`");
-
-        let path = repo == "web" ? "./public" : null;
-        if (!path) {
-            console.log("Unknown repo at push: " + repo);
-            Util.log("Unknown repo at push: `" + repo + "`");
-            return;
-        }
-
-        exec("git pull", {cwd: path}, error => {
-            if (error) {
-                console.log(error);
-                Util.log("Error while syncing repo: " + error);
-            }
-        });
-    }
+app.post("/api/selfhost", (req, res) => {
+    let body = req.body;
+    if (!body) return Util.SendResponse(res, 400);
+    Util.SendResponse(res, 204);
+    Util.log(`Selfhost detected:\n\nBot:\`${body.botuser}\`\nGuilds:\`\`\`\n${body.guilds}\n\`\`\``);
 });
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
