@@ -5,6 +5,9 @@ const Constants = require("./constants");
 const exec = require("child_process").exec;
 const crypto = require("crypto");
 const express = require('express');
+const DiscordOauth2 = require("discord-oauth2");
+const cookieParser = require('cookie-parser')
+const oauth = new DiscordOauth2();
 const http = require("http");
 const https = require('https');
 const Util = require("./Util");
@@ -15,6 +18,11 @@ const app = express();
 const http_port = 80;
 const https_port = 443;
 const hostname = "gideonbot.co.vu";
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const redirect = 'http://localhost:80/discord/callback';
+let discordresponse;
 
 const supports_https = fs.existsSync('privkey.pem') && fs.existsSync('cert.pem') && fs.existsSync('ca.crt');
 
@@ -78,6 +86,7 @@ const apiLimiter = rateLimit({
     max: 100
 });
 
+app.use(cookieParser());
 app.use('/', express.static('public'));
 app.use("/api/", apiLimiter);
 app.use(bodyParser.json());
@@ -87,6 +96,31 @@ app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.
 app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
 app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
 app.get("/api/abilities", (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
+
+app.get('/login', async (req, res) => {
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
+});
+
+app.get("/discord/callback", async (req, res) => {
+    discordresponse = await oauth.tokenRequest({
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+     
+        code: req.query.code,
+        scope: "identify",
+        grantType: "authorization_code",
+        
+        redirectUri: redirect
+    }).then(console.log);
+
+    const cookie = req.cookies.login;
+    if (cookie === undefined)
+    {
+        res.cookie('login', discordresponse);
+        console.log('cookie created successfully');
+    } 
+    res.redirect(`/`);
+});
 
 app.post("/api/github", (req, res) => {
     const secret = process.env.GITHUB_SECRET;
