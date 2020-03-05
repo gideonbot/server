@@ -82,7 +82,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next)=> {
-    Util.log(`New request:\`\`\`\nIP: ${req.ip} Method: ${req.method}\nURL: ${req.originalUrl} TLS: ${req.secure ? 'Yes' : 'No'}\n\nBody:\n${req.body}\n\`\`\``);
+    Util.log(`New request:\`\`\`\nIP: ${req.ip}\nMethod: ${req.method}\nURL: ${req.originalUrl}\nTLS: ${req.secure ? 'Yes' : 'No'}\n\nBody:\n${req.body? req.body : 'No body provided'}\n\`\`\``);
     next();
 });
 
