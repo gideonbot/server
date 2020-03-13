@@ -1,19 +1,19 @@
 require('dotenv').config();
 const bodyParser = require("body-parser");
-const rateLimit = require("express-rate-limit");
 const Constants = require("./constants");
-const exec = require("child_process").exec;
-const crypto = require("crypto");
-const express = require('express');
-const DiscordOauth2 = require("discord-oauth2");
 const cookieParser = require('cookie-parser')
-const oauth = new DiscordOauth2();
+const crypto = require("crypto");
+const DiscordOauth2 = require("discord-oauth2");
+const exec = require("child_process").exec;
+const express = require('express');
+const fs = require('fs');
+const git = require("git-last-commit");
 const http = require("http");
 const https = require('https');
+const rateLimit = require("express-rate-limit");
 const Util = require("./Util");
-const git = require("git-last-commit");
-const fs = require('fs');
 
+const oauth = new DiscordOauth2();
 const app = express();
 const http_port = 80;
 const https_port = 443;
@@ -186,7 +186,7 @@ app.post("/api/github", (req, res) => {
 app.post("/api/selfhost", (req, res) => {
     let body = req.body;
     if (!body || !body.user || !body.guilds) return Util.SendResponse(res, 400);
-    
+
     Util.SendResponse(res, 204);
     Util.log(`Selfhost detected:\n\nBot:\`${body.user}\`\nGuilds:\`\`\`\n${body.guilds}\n\`\`\``);
 });
