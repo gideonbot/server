@@ -162,6 +162,25 @@ app.post("/api/github", (req, res) => {
             });
         }
     }
+
+    else if (req.get("x-github-event") == "push") {
+        console.log("Push detected for " + repo);
+        Util.log("Push detected for `" + repo + "`");
+
+        let path = repo == "web" ? "./public" : null;
+        if (!path) {
+            console.log("Unknown repo at push: " + repo);
+            Util.log("Unknown repo at push: `" + repo + "`");
+            return;
+        }
+
+        exec("git pull", {cwd: path}, error => {
+            if (error) {
+                console.log(error);
+                Util.log("Error while syncing repo: " + error);
+            }
+        });
+    }
 });
 
 app.post("/api/selfhost", (req, res) => {
