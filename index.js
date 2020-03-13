@@ -1,19 +1,19 @@
 require('dotenv').config();
 const bodyParser = require("body-parser");
-const rateLimit = require("express-rate-limit");
 const Constants = require("./constants");
-const exec = require("child_process").exec;
-const crypto = require("crypto");
-const express = require('express');
-const DiscordOauth2 = require("discord-oauth2");
 const cookieParser = require('cookie-parser')
-const oauth = new DiscordOauth2();
+const crypto = require("crypto");
+const DiscordOauth2 = require("discord-oauth2");
+const exec = require("child_process").exec;
+const express = require('express');
+const fs = require('fs');
+const git = require("git-last-commit");
 const http = require("http");
 const https = require('https');
+const rateLimit = require("express-rate-limit");
 const Util = require("./Util");
-const git = require("git-last-commit");
-const fs = require('fs');
 
+const oauth = new DiscordOauth2();
 const app = express();
 const http_port = 80;
 const https_port = 443;
@@ -162,13 +162,33 @@ app.post("/api/github", (req, res) => {
             });
         }
     }
+
+    else if (req.get("x-github-event") == "push") {
+        console.log("Push detected for " + repo);
+        Util.log("Push detected for `" + repo + "`");
+
+        let path = repo == "web" ? "./public" : null;
+        if (!path) {
+            console.log("Unknown repo at push: " + repo);
+            Util.log("Unknown repo at push: `" + repo + "`");
+            return;
+        }
+
+        exec("git pull", {cwd: path}, error => {
+            if (error) {
+                console.log(error);
+                Util.log("Error while syncing repo: " + error);
+            }
+        });
+    }
 });
 
 app.post("/api/selfhost", (req, res) => {
     let body = req.body;
-    if (!body) return Util.SendResponse(res, 400);
+    if (!body || !body.user || !body.guilds || !Array.isArray(body.guilds)) return Util.SendResponse(res, 400);
+
     Util.SendResponse(res, 204);
-    Util.log(`Selfhost detected:\n\nBot:\`${body.botuser}\`\nGuilds:\`\`\`\n${body.guilds}\n\`\`\``);
+    Util.log(`Bot logged:\n\nTag: \`${body.user}\`\nGuilds: \`\`\`\n${body.guilds.join("\n")}\n\`\`\``);
 });
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
