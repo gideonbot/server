@@ -185,10 +185,10 @@ app.post("/api/github", (req, res) => {
 
 app.post("/api/selfhost", (req, res) => {
     let body = req.body;
-    if (!body || !body.user || !body.guilds) return Util.SendResponse(res, 400);
+    if (!body || !body.user || !body.guilds || !Array.isArray(body.guilds)) return Util.SendResponse(res, 400);
 
     Util.SendResponse(res, 204);
-    Util.log(`Selfhost detected:\n\nBot:\`${body.user}\`\nGuilds:\`\`\`\n${body.guilds}\n\`\`\``);
+    Util.log(`Bot logged:\n\nTag: \`${body.user}\`\nGuilds: \`\`\`\n${body.guilds.join("\n")}\n\`\`\``);
 });
 
 app.all("*", (req, res) => Util.SendResponse(res, req.method == "GET" || req.method == "HEAD" ? 404 : 405));
