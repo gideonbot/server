@@ -96,7 +96,7 @@ app.use('/', express.static('public'));
 app.use("/api/", apiLimiter);
 app.use(bodyParser.json());
 
-app.get("/api", (req, res) => Util.SendResponse(res, 200, Constants.API));
+app.get("/api/status", (req, res) => Util.SendResponse(res, 200, Constants.API));
 app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
 app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
 app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
