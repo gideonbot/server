@@ -154,7 +154,7 @@ app.post("/api/github", (req, res) => {
             Util.log("CI build passed successfully for `" + repo + "`");
     
             let path = repo == "server" ? "./" : "../" + repo;
-            exec("rm package.json & rm package-lock.json & git pull & git fetch & git checkout origin/master -- package.json & git checkout origin/master -- package-lock.json & npm install", {cwd: path}, error => {
+            exec("rm package.json & rm package-lock.json & git pull", {cwd: path}, error => {
                 if (error) {
                     console.log(error);
                     Util.log("Error while syncing repo: " + error);
