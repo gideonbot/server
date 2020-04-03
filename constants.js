@@ -257,7 +257,7 @@ module.exports.Speedsters = [
 module.exports.Abilities = {
     speedsters: {
         title1: "Speed Force connection/Meta-human physiology",
-        ability1: "A Speedsters powers come from a connection to the Speed Force, this alteres and supercharges their DNA, cells, and neurotransmitters, augmenting their physiology.",
+        ability1: "A Speedster's powers come from a connection to the Speed Force, this alters and supercharges their DNA, cells, and neurotransmitters, augmenting their physiology.",
         title2: "Accelerated healing factor",
         ability2: "Without treatment, most damage heals in hours if not minutes with no lingering signs. Even normally permanent damage, like paraplegia, is completely repaired in days.",
         title3: "Bodily vibration",
@@ -294,7 +294,7 @@ module.exports.Abilities = {
         ability18: "The kinetic energy buildup from a speedsters speed can allow them to breach the space-time continuum, allowing them to physically enter the Speed Force and travel through time.",
         title19: "Time reversal (Unique to Nora West-Allen)",
         ability19: "Nora is able to reverse time around her while running, remaining completely unaffected.",
-        title20: "Interdimensional travel",
+        title20: "Inter-dimensional travel",
         ability20: "Speedsters can move fast enough to break open portals between dimensions, allowing them to travel to different universes.",
         title21: "Speed mirages",
         ability21: "Speedsters can generate illusions of themselves to make it appear as if they were in many places at once, when in reality they are simply bouncing back and forth too fast for the human mind to perceive the difference.",
@@ -318,7 +318,7 @@ module.exports.Abilities = {
         ability2: "Vibers have a psychic link to the natural energies of reality, allowing them to connect with various vibrations of the multiverse and manipulate them for various effects.",
         title3: "Dimensional awareness",
         ability3: "Known as \"vibing\", vibers can perceive various events throughout time and space, letting them see into the past and future as well as parallel dimensions, even into the very Speed Force itself.",
-        title4: "Interdimensional travel",
+        title4: "Inter-dimensional travel",
         ability4: "With their natural connection to the multiverse, vibers can open portals to other dimensions. Being a noticeably more advanced ability, they are shown to need focus and a proper awareness of their intended target.",
         title5: "Vibrational blasts",
         ability5: "Vibers are able to generate powerful blue or red concussive blasts of vibrations from their hands capable of propelling full-grown humans through the air.",
