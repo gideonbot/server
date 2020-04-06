@@ -257,7 +257,7 @@ module.exports.Speedsters = [
 module.exports.Abilities = {
     speedsters: {
         title1: "Speed Force connection/Meta-human physiology",
-        ability1: "Speedster's powers come from a connection to the Speed Force, this alters and supercharges their DNA, cells, and neurotransmitters, augmenting their physiology.",
+        ability1: "A Speedster's powers come from a connection to the Speed Force, this alters and supercharges their DNA, cells, and neurotransmitters, augmenting their physiology.",
         title2: "Accelerated healing factor",
         ability2: "Without treatment, most damage heals in hours if not minutes with no lingering signs. Even normally permanent damage, like paraplegia, is completely repaired in days.",
         title3: "Bodily vibration",
