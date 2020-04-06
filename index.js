@@ -51,7 +51,8 @@ if (supports_https) {
         key: fs.readFileSync('privkey.pem', 'utf8'),
         cert: fs.readFileSync('cert.pem', 'utf8'),
         ca: [fs.readFileSync('ca.crt', 'utf8')],
-        minVersion: "TLSv1.2"
+        minVersion: "TLSv1.2",
+        maxVersion: "TLSv1.3"
     }, app);
 
     https_server.listen(https_port, "0.0.0.0", () => {
