@@ -155,7 +155,7 @@ app.post("/api/github", (req, res) => {
             Util.log("CI build passed successfully for `" + repo + "`");
     
             let path = repo == "server" ? "./" : "../" + repo;
-            exec("sudo git stash & sudo git pull & sudo npm install & sudo npm update", {cwd: path}, error => {
+            exec("sudo git stash & sudo git pull & npm install & npm update", {cwd: path}, error => {
                 if (error) {
                     console.log(error);
                     Util.log("Error while syncing repo: " + error);
