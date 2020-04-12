@@ -383,7 +383,7 @@ module.exports.Abilities = {
         title28: "Telepathy immunity",
         ability28: "Kryptonians are immune to most forms of telepathic powers.",
         title29: "Power bestowal via electricity",
-        ability29: "If a kryptonian is holding a person while electrocuted by lightning, their kryptonian physiology allows them to affect the person, giving the person strange abilites.",
+        ability29: "If a kryptonian is holding a person while electrocuted by lightning, their kryptonian physiology allows them to affect the person, giving the person strange abilities.",
     }
 }
 
