@@ -102,6 +102,7 @@ app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quote
 app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
 app.get("/api/abilities", (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
 app.get("/invite", (req, res) => res.redirect(307, Constants.Invite)); //307 - we don't want caching
+app.get("/discord", (req, res) => res.redirect(307, Constants.Discord_Invite)); //307 - ^
 
 app.get('/login', async (req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
