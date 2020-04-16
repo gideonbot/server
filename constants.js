@@ -391,6 +391,43 @@ module.exports.Abilities = {
     }
 }
 
+module.exports.Timeline = [
+    "Because of your interferences, the President of the United States is now a resurrected Michael Jackson. ",
+    "Your interference has caused the Green Lantern to make One Billion at the Box Office, what have you done.",
+    "The effect of you interfering with the timeline has caused Season 4 of Arrow to not exist, well done.",
+    "Interfering with the ti..meline has caused me to not be inven….ted. I don’t feel so go…………",
+    "Because of your interfering, Endgame is not the highest grossing film of all time, Avatar still is, how awful.",
+    "Your interference has caused the Nazi’s to be lead under the guidance of a drunk Mick Rory.",
+    "Because of your interferences, there is now a musical about Superman called, “Super-Musical”",
+    "Interfering with the timeline caused the Mona Lisa to now be a painting of Leonardo Da Vinci’s feet",
+    "The effect of you interfering with the timeline has caused Julius Caesar to be murdered by Mario and Luigi. Mamma Mia!",
+    "Because of your interference with the timeline, men are now the gender that give birth, and it is very painful.",
+    "Your interference has caused the future to be destroyed by Radioactive Kittens",
+    "Interfering with the timeline has caused Joan of Arc to instead be John of Arc",
+    "The effect of your interfering has caused a Pac-Man console to be found by Genghis Khan, who stopped conquering to get a perfect high score.",
+    "Because of your reckless interferences with the timeline, Abraham Lincoln now wears his hat because a small green alien lives under it.",
+    "Your interference with the timeline has caused the King of England to now be a Jewish Leprechaun",
+    "Interfering with the timeline has caused O.J. Simpson to become a black market motivational speaker on how to get away with crimes",
+    "Due to your interfering with the timeline, Disney now rules the entire planet with an iron fist.",
+    "Interfering with the timeline has caused Freddie Mercury to have come back from the dead, only to kill the person who invented Dubstep",
+    "Your interference with the timeline has caused the game ‘Crisis on Earth One’ to be released, the whole world salutes you.",
+    "Because of your interferences with the timeline, The Lion King is now a movie about a king who has a pet lion.",
+    "Your interference with the timeline has caused World Peace, good job!",
+    "Due to your reckless interferences with the timeline, the world is now run under the eyes of an all-seeing Axolotl.",
+    "Your interferences with the timeline have caused the film ‘Top Gun’ to never have been made. Oh dear, what have you done!",
+    "Because of your interferences with the timeline, the Soviet Union was now run by Willy Wonka in a Santa Claus costume.",
+    "Due to your interference with the timeline has caused Easter to now be celebrated with Chocolate Swordfish.",
+    "Your interference with the timeline has caused you to get superpowers, type in !accelerator to find out what they are.",
+    "Interfering with the timeline has caused to become married to Jessica Parker Kennedy. Well done!Because of your reckless interferences with the timeline, Han Solo was now played by Eddie Murphy.",
+    "Due to your interferences with the timeline, Ice-cream is now very toxic and dangerous, and kids are now enjoying bowls of asbestos.",
+    "The effect of you Interfering with the timeline has caused the Statue of Liberty to now be made entirely of Lego.",
+    "Your interfering with the timeline has caused Pirates and Mermaids to have been in a 300 year war, ending with the Mermaids viciously murdering all of the pirates.",
+    "Interfering with the timeline has caused Sasquatch to now be hunted for its delicious meat.   ",
+    "Interfering with the timeline has caused Joan of Arc to instead be John of Arc",
+    "Due to your reckless interferences with the timeline, the most spoken language in the world is now Japanese… ひざはおいしですよ。"
+]
+
+
 module.exports.API = {
     API: {
         status: "Gideon API online and functional!"

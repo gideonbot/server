@@ -101,6 +101,7 @@ app.get("/api/soundtracks", (req, res) => Util.SendResponse(res, 200, Constants.
 app.get("/api/quotes", (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
 app.get("/api/speedsters", (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
 app.get("/api/abilities", (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
+app.get("/api/timeline", (req, res) => Util.SendResponse(res, 200, Constants.Timeline));
 app.get("/invite", (req, res) => res.redirect(307, Constants.Invite)); //307 - we don't want caching
 app.get("/discord", (req, res) => res.redirect(307, Constants.Discord_Invite)); //307 - ^
 
