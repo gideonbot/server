@@ -248,7 +248,7 @@ app.post("/api/selfhost", (req, res) => {
 });
 
 app.put("/api/invite", (req, res) => {
-    let key = req.query["key"];
+    let key = req.query.key;
 
     if (!key || !config.api_keys.includes(key)) return Util.SendResponse(res, 401);
 
@@ -261,7 +261,7 @@ app.put("/api/invite", (req, res) => {
 });
 
 app.put("/api/discord/invite", (req, res) => {
-    let key = req.query["key"];
+    let key = req.query.key;
 
     if (!key || !config.api_keys.includes(key)) return Util.SendResponse(res, 401);
 
