@@ -423,7 +423,6 @@ module.exports.Timeline = [
     "The effect of you Interfering with the timeline has caused the Statue of Liberty to now be made entirely of Lego.",
     "Your interfering with the timeline has caused Pirates and Mermaids to have been in a 300 year war, ending with the Mermaids viciously murdering all of the pirates.",
     "Interfering with the timeline has caused Sasquatch to now be hunted for its delicious meat.   ",
-    "Interfering with the timeline has caused Joan of Arc to instead be John of Arc",
     "Due to your reckless interferences with the timeline, the most spoken language in the world is now Japanese… ひざはおいしですよ。"
 ]
 
