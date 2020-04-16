@@ -18,7 +18,7 @@ const Util = require("./Util");
 //#region Variables
 const oauth = new DiscordOauth2();
 const app = express();
-const http_port = 82;
+const http_port = 80;
 const https_port = 443;
 const hostname = "gideonbot.co.vu";
 
