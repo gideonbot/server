@@ -432,6 +432,3 @@ module.exports.API = {
         status: "Gideon API online and functional!"
     }
 }
-
-module.exports.Invite = "https://discordapp.com/oauth2/authorize?client_id=595328879397437463&permissions=37088321&scope=bot";
-module.exports.Discord_Invite = "https://discord.gg/h9SEQaU";

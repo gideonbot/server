@@ -3,3 +3,4 @@
 node_modules/
 privkey.pem
 cert.pem
+server.json
