@@ -417,7 +417,7 @@ module.exports.Timeline = [
     "Your interferences with the timeline have caused the film ‘Top Gun’ to never have been made. Oh dear, what have you done!",
     "Because of your interferences with the timeline, the Soviet Union was now run by Willy Wonka in a Santa Claus costume.",
     "Due to your interference with the timeline has caused Easter to now be celebrated with Chocolate Swordfish.",
-    "Your interference with the timeline has caused you to get superpowers, type in !accelerator to find out what they are.",
+    "Your interference with the timeline has caused you to get superpowers.",
     "Interfering with the timeline has caused to become married to Jessica Parker Kennedy. Well done!Because of your reckless interferences with the timeline, Han Solo was now played by Eddie Murphy.",
     "Due to your interferences with the timeline, Ice-cream is now very toxic and dangerous, and kids are now enjoying bowls of asbestos.",
     "The effect of you Interfering with the timeline has caused the Statue of Liberty to now be made entirely of Lego.",
