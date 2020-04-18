@@ -1,6 +1,7 @@
 .env
 .vscode
 node_modules/
+package-lock.json
 privkey.pem
 cert.pem
 server.json
