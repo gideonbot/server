@@ -41,7 +41,6 @@ let config = {
     bot_invite: 'https://discordapp.com/oauth2/authorize?client_id=595328879397437463&permissions=37088320&scope=bot'
 };
 
-
 InitConfig();
 function InitConfig() {
     if (!fs.existsSync(config_path)) WriteConfig();
