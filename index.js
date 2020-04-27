@@ -20,7 +20,7 @@ const oauth = new DiscordOauth2();
 const app = express();
 const http_port = 80;
 const https_port = 443;
-const hostname = 'gideonbot.co.vu';
+const hostname = 'gideonbot.com';
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
