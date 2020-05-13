@@ -20,7 +20,7 @@ const oauth = new DiscordOauth2();
 const app = express();
 const http_port = 80;
 const https_port = 443;
-const hostname = 'gideonbot.co.vu';
+const hostname = 'gideonbot.com';
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -128,7 +128,7 @@ app.use((req, res, next)=> {
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100
+    max: 250
 });
 
 app.use(cookieParser());
