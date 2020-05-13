@@ -159,6 +159,8 @@ app.get('/discord', (req, res) => res.redirect(307, config.discord_invite)); //3
 app.get('/api/invite', (req, res) => Util.SendResponse(res, 200, {url: config.bot_invite}));
 app.get('/api/discord', (req, res) => Util.SendResponse(res, 200, {url: config.discord_invite}));
 
+app.all(/api\/dump/, (req, res) => Util.SendResponse(res, 200));
+
 app.get('/login', async (req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
 });
