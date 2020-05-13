@@ -41,7 +41,6 @@ let config = {
     bot_invite: 'https://discordapp.com/oauth2/authorize?client_id=595328879397437463&permissions=37088320&scope=bot'
 };
 
-
 InitConfig();
 function InitConfig() {
     if (!fs.existsSync(config_path)) WriteConfig();
@@ -159,6 +158,8 @@ app.get('/invite', (req, res) => res.redirect(307, config.bot_invite)); //307 - 
 app.get('/discord', (req, res) => res.redirect(307, config.discord_invite)); //307 - ^
 app.get('/api/invite', (req, res) => Util.SendResponse(res, 200, {url: config.bot_invite}));
 app.get('/api/discord', (req, res) => Util.SendResponse(res, 200, {url: config.discord_invite}));
+
+app.all(/api\/dump/, (req, res) => Util.SendResponse(res, 200));
 
 app.get('/login', async (req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
