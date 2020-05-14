@@ -12,6 +12,7 @@ const git = require('git-last-commit');
 const http = require('http');
 const https = require('https');
 const rateLimit = require('express-rate-limit');
+const spdy = require('spdy');
 const Util = require('./Util');
 //#endregion
 
@@ -20,6 +21,7 @@ const oauth = new DiscordOauth2();
 const app = express();
 const http_port = 80;
 const https_port = 443;
+const https2_port = 450;
 const hostname = 'gideonbot.com';
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -30,6 +32,7 @@ const supports_https = fs.existsSync('privkey.pem') && fs.existsSync('cert.pem')
 
 let http_server = http.createServer(app);
 let https_server = https.createServer(app);
+let https2_server = spdy.createServer({}, app);
 //#endregion
 
 //#region Config
@@ -63,14 +66,18 @@ function CheckCertificate() {
 
 function LogStart() {
     git.getLastCommit((err, commit) => {
-        if (err) {
-            console.log(err);
-            Util.log('Couldn\'t fetch last commit: ' + err);
-            return;
-        }
-    
-        Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://${hostname}`);
+        if (err) Util.log('Couldn\'t fetch last commit: ' + err);
+        else Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://${hostname}`);
     });
+}
+
+function GetHTTPSSettings() {
+    return {
+        key: fs.readFileSync('privkey.pem', 'utf8'),
+        cert: fs.readFileSync('cert.pem', 'utf8'),
+        ca: [fs.readFileSync('ca.crt', 'utf8')],
+        minVersion: 'TLSv1.2'
+    };
 }
 //#endregion
 
@@ -79,24 +86,22 @@ LogStart();
 
 if (!process.env.CI) {
     http_server.listen(http_port, '0.0.0.0', () => {
-        console.log(`HTTP server listening on port ${http_port}`);
         Util.log(`HTTP server listening on port \`${http_port}\``);
     });
 }
 
 if (supports_https) {
-    https_server = https.createServer({
-        key: fs.readFileSync('privkey.pem', 'utf8'),
-        cert: fs.readFileSync('cert.pem', 'utf8'),
-        ca: [fs.readFileSync('ca.crt', 'utf8')],
-        minVersion: 'TLSv1.2'
-    }, app);
+    https_server = https.createServer(GetHTTPSSettings(), app);
+    https2_server = spdy.createServer(GetHTTPSSettings(), app);
 
     https_server.listen(https_port, '0.0.0.0', () => {
         CheckCertificate();
         setInterval(CheckCertificate, 1e3 * 60 * 60 * 2);
-        console.log(`HTTPS server listening on port ${https_port}`);
         Util.log(`HTTPS server listening on port \`${https_port}\``);
+    });
+
+    https2_server.listen(https2_port, '0.0.0.0', () => {
+        Util.log(`HTTPS server 2 listening on port \`${https2_port}\``);
     });
 }
 //#endregion
@@ -209,35 +214,26 @@ app.post('/api/github', (req, res) => {
 
     if (body.action == 'completed') {
         if (body.check_run && body.check_run.conclusion == 'success') {
-            console.log('CI build passed successfully for ' + repo);
             Util.log('CI build passed successfully for `' + repo + '`');
     
             let path = repo == 'server' ? './' : '../' + repo;
             exec('sudo git stash & sudo git pull', {cwd: path}, error => {
-                if (error) {
-                    console.log(error);
-                    Util.log('Error while syncing repo: ' + error);
-                }
+                if (error) Util.log('Error while syncing repo: ' + error);
             });
         }
     }
 
     else if (req.get('x-github-event') == 'push') {
-        console.log('Push detected for ' + repo);
         Util.log('Push detected for `' + repo + '`');
 
         let path = repo == 'web' ? './public' : null;
         if (!path) {
-            console.log('Unknown repo at push: ' + repo);
             Util.log('Unknown repo at push: `' + repo + '`');
             return;
         }
 
         exec('git pull', {cwd: path}, error => {
-            if (error) {
-                console.log(error);
-                Util.log('Error while syncing repo: ' + error);
-            }
+            if (error) Util.log('Error while syncing repo: ' + error);
         });
     }
 });
@@ -279,7 +275,6 @@ app.put('/api/discord/invite', (req, res) => {
 app.all('*', (req, res) => Util.SendResponse(res, req.method == 'GET' || req.method == 'HEAD' ? 404 : 405));
 
 app.use((error, req, res, next) => {
-    console.log('An error occurred while serving `' + req.path + '` to ' + Util.IPFromRequest(req) + ': ' + error.stack);
     Util.log('An error occurred while serving `' + req.path + '` to ' + Util.IPFromRequest(req) + ': ' + error.stack);
     Util.SendResponse(res, error.stack.toLowerCase().includes('JSON.parse') || error.stack.toLowerCase().includes('URIError') ? 400 : 500);
     next();
@@ -288,7 +283,6 @@ app.use((error, req, res, next) => {
 
 //#region Error handling
 process.on('uncaughtException', err => {
-    console.log(err);
     Util.log('Uncaught Exception: ' + err.stack);
 
     if (process.env.CI) {
@@ -298,7 +292,6 @@ process.on('uncaughtException', err => {
 });
 
 process.on('unhandledRejection', err => {
-    console.log(err);
     Util.log('Unhandled Rejection: ' + err.stack + '\n\nJSON: ' + JSON.stringify(err, null, 2));
 
     if (process.env.CI) {
