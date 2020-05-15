@@ -133,7 +133,11 @@ app.use((req, res, next)=> {
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 250
+    max: 250,
+    skip: req => {
+        if (req.path.startsWith('/dump')) return true;
+        return false;
+    }
 });
 
 app.use(cookieParser());
