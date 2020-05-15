@@ -135,7 +135,7 @@ const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 250,
     skip: req => {
-        if (req.path.startsWith('/api/dump')) return true;
+        if (req.path.startsWith('/dump')) return true;
         return false;
     }
 });
