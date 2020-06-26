@@ -30,7 +30,7 @@ let http_server = http.createServer(app);
 //#region Config
 const config_path = './server.json';
 let config = {
-    //pls don't store api keys like this, its bad
+    //pls don't store api keys like this, it is bad
     api_keys: [],
     discord_invite: 'https://discord.gg/h9SEQaU',
     bot_invite: 'https://discordapp.com/oauth2/authorize?client_id=595328879397437463&permissions=37088320&scope=bot'
