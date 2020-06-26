@@ -10,29 +10,21 @@ const express = require('express');
 const fs = require('fs');
 const git = require('git-last-commit');
 const http = require('http');
-const https = require('https');
 const rateLimit = require('express-rate-limit');
-const spdy = require('spdy');
 const Util = require('./Util');
 //#endregion
 
 //#region Variables
 const oauth = new DiscordOauth2();
 const app = express();
-const http_port = 80;
-const https_port = 443;
-const https2_port = 450;
+const http_port = process.env.PORT || 80;
 const hostname = 'gideonbot.com';
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const redirect = 'http://localhost:80/discord/callback';
 
-const supports_https = fs.existsSync('privkey.pem') && fs.existsSync('cert.pem') && fs.existsSync('ca.crt');
-
 let http_server = http.createServer(app);
-let https_server = https.createServer(app);
-let https2_server = spdy.createServer({}, app);
 //#endregion
 
 //#region Config
@@ -63,21 +55,13 @@ function CheckCertificate() {
         if (days <= 4) Util.log('Certificate will expire in less than 4 days!');
     }, failed => Util.log('Failed to check certificate: ' + failed));
 }
+setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 
 function LogStart() {
     git.getLastCommit((err, commit) => {
         if (err) Util.log('Couldn\'t fetch last commit: ' + err);
-        else Util.log(`Server${supports_https ? 's' : ''} starting on port${supports_https ? 's' : ''} \`${http_port}\`${supports_https ? ' & '  + '`' + https_port + '`' : ''}, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://${hostname}`);
+        else Util.log(`Server starting, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://${hostname}`);
     });
-}
-
-function GetHTTPSSettings() {
-    return {
-        key: fs.readFileSync('privkey.pem', 'utf8'),
-        cert: fs.readFileSync('cert.pem', 'utf8'),
-        ca: [fs.readFileSync('ca.crt', 'utf8')],
-        minVersion: 'TLSv1.2'
-    };
 }
 //#endregion
 
@@ -89,21 +73,6 @@ if (!process.env.CI) {
         Util.log(`HTTP server listening on port \`${http_port}\``);
     });
 }
-
-if (supports_https) {
-    https_server = https.createServer(GetHTTPSSettings(), app);
-    https2_server = spdy.createServer(GetHTTPSSettings(), app);
-
-    https_server.listen(https_port, '0.0.0.0', () => {
-        CheckCertificate();
-        setInterval(CheckCertificate, 1e3 * 60 * 60 * 2);
-        Util.log(`HTTPS server listening on port \`${https_port}\``);
-    });
-
-    https2_server.listen(https2_port, '0.0.0.0', () => {
-        Util.log(`HTTPS server 2 listening on port \`${https2_port}\``);
-    });
-}
 //#endregion
 
 //#region Express
@@ -111,17 +80,17 @@ app.set('env', 'production');
 app.set('x-powered-by', false);
 
 app.use((req, res, next) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    //res.set('Access-Control-Allow-Origin', '*');
     res.set('Referrer-Policy', 'same-origin');
     res.set('X-Content-Type-Options', 'nosniff');
     res.set('X-Frame-Options', 'SAMEORIGIN');
     res.set('X-XSS-Protection', '1; mode=block');
 
-    if (https_server.listening && !req.secure) {
+    /*if (https_server.listening && !req.secure) {
         //requests that send data HAVE to go through https
         if (req.method != 'GET' && req.method != 'HEAD') return Util.SendResponse(res, 405);
         return res.redirect(307, `https://${hostname}${req.url}`);
-    }
+    }*/
 
     next();
 });
