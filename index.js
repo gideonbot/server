@@ -55,7 +55,6 @@ function CheckCertificate() {
         if (days <= 4) Util.log('Certificate will expire in less than 4 days!');
     }, failed => Util.log('Failed to check certificate: ' + failed));
 }
-setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 
 function LogStart() {
     git.getLastCommit((err, commit) => {
@@ -71,6 +70,7 @@ LogStart();
 console.log(process.env.CI);
 if (!process.env.CI) {
     http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
+    setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 }
 //#endregion
 
