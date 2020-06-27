@@ -78,17 +78,10 @@ app.set('env', 'production');
 app.set('x-powered-by', false);
 
 app.use((req, res, next) => {
-    //res.set('Access-Control-Allow-Origin', '*');
     res.set('Referrer-Policy', 'same-origin');
     res.set('X-Content-Type-Options', 'nosniff');
     res.set('X-Frame-Options', 'SAMEORIGIN');
     res.set('X-XSS-Protection', '1; mode=block');
-
-    /*if (https_server.listening && !req.secure) {
-        //requests that send data HAVE to go through https
-        if (req.method != 'GET' && req.method != 'HEAD') return Util.SendResponse(res, 405);
-        return res.redirect(307, `https://${hostname}${req.url}`);
-    }*/
 
     next();
 });
