@@ -67,7 +67,6 @@ function LogStart() {
 //#region Init
 LogStart();
 
-console.log(process.env.CI);
 if (!process.env.CI) {
     http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
     setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
