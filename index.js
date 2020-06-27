@@ -68,10 +68,9 @@ function LogStart() {
 //#region Init
 LogStart();
 
+console.log(process.env.CI);
 if (!process.env.CI) {
-    http_server.listen(http_port, '0.0.0.0', () => {
-        Util.log(`HTTP server listening on port \`${http_port}\``);
-    });
+    http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
 }
 //#endregion
 
