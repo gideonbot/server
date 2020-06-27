@@ -75,6 +75,7 @@ if (!process.env.CI) {
 
 //#region Express
 app.set('env', 'production');
+app.set('trust proxy', true);
 app.set('x-powered-by', false);
 
 app.use((req, res, next) => {
@@ -87,7 +88,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next)=> {
-    //Util.log(`New request:\`\`\`\nIP: ${req.ip}\nMethod: ${req.method}\nURL: ${req.originalUrl}\nTLS: ${req.secure ? 'Yes' : 'No'}\n\nBody:\n${req.body? req.body : 'No body provided'}\n\`\`\``);
+    console.log(req.ip + ' ' + req.method + ' ' + req.path);
     next();
 });
 
