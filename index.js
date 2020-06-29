@@ -94,6 +94,7 @@ if (!process.env.CI) {
         whitelisted_ips: ['167.172.130.67', '167.172.138.127'],
         ban_threshold_count: 100,
         ban_threshold_time: 45,
+        file_path: __dirname,
         response: {
             code: 403,
             ctype: 'text/html',
