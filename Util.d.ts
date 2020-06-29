@@ -1,5 +1,3 @@
-import Discord from "discord.js";
-
 export const config: Config;
 export const HTTP_Codes: Record<number, string>;
 export function log(message: string): boolean;
