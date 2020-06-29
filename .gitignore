@@ -2,8 +2,7 @@
 .vscode
 node_modules/
 package-lock.json
-privkey.pem
-cert.pem
-ca.crt
+*.pem
+*.sh
 public/
 server.json
