@@ -88,20 +88,23 @@ app.use((req, res, next) => {
     next();
 });
 
-const controller = new Controller({
-    whitelisted_ips: ['167.172.130.67', '167.172.138.127'],
-    ban_threshold_count: 100,
-    ban_threshold_time: 45,
-    response: {
-        code: 403,
-        ctype: 'text/html',
-        body: __dirname + '/blocked.html'
-    }
-});
 
-controller.on('ip_banned', ip => Util.log(ip + ' was banned because of too many requests'));
-
-app.use(controller.middleware);
+if (!process.env.CI) {
+    const controller = new Controller({
+        whitelisted_ips: ['167.172.130.67', '167.172.138.127'],
+        ban_threshold_count: 100,
+        ban_threshold_time: 45,
+        response: {
+            code: 403,
+            ctype: 'text/html',
+            body: __dirname + '/blocked.html'
+        }
+    });
+    
+    controller.on('ip_banned', ip => Util.log(ip + ' was banned because of too many requests'));
+    
+    app.use(controller.middleware);
+}
 
 app.use((req, res, next)=> {
     console.log(req.ip + ' ' + req.method + ' ' + req.path);
