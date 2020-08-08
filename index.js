@@ -91,7 +91,7 @@ app.use((req, res, next) => {
 
 if (!process.env.CI) {
     const controller = new Controller({
-        whitelisted_ips: ['167.172.130.67', '167.172.138.127'],
+        whitelisted_ips: ['167.99.153.39'],
         ban_threshold_count: 100,
         ban_threshold_time: 45,
         file_path: __dirname,
@@ -221,14 +221,6 @@ app.post('/api/github', (req, res) => {
             if (error) Util.log('Error while syncing repo: ' + error);
         });
     }
-});
-
-app.post('/api/selfhost', (req, res) => {
-    let body = req.body;
-    if (!body || !body.user || !body.guilds || !Array.isArray(body.guilds)) return Util.SendResponse(res, 400);
-
-    Util.SendResponse(res, 204);
-    Util.log(`Bot logged:\n\nTag: \`${body.user}\`\nGuilds: \`\`\`\n${body.guilds.join('\n')}\n\`\`\``);
 });
 
 app.put('/api/invite', (req, res) => {
