@@ -4,6 +4,7 @@ export function log(message: string): boolean;
 export function SendResponse(res: Express.Response, code: number, obj?: object, pretty?: boolean): void;
 export function IPFromRequest(req: Express.Request): string;
 export function GetCertExpirationDays(host: string): Promise<number>;
+export function GetJSON(str: string): object;
 
 interface Config {
     avatar: string;
