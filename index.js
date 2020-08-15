@@ -299,7 +299,7 @@ app.all('*', (req, res) => Util.SendResponse(res, req.method == 'GET' || req.met
 
 app.use((error, req, res, next) => {
     Util.log('An error occurred while serving `' + req.path + '` to ' + Util.IPFromRequest(req) + ': ' + error.stack);
-    Util.SendResponse(res, error.stack.toLowerCase().includes('JSON.parse') || error.stack.toLowerCase().includes('URIError') ? 400 : 500);
+    Util.SendResponse(res, error.stack.toLowerCase().includes('json.parse') || error.stack.toLowerCase().includes('urierror') ? 400 : 500);
     next();
 });
 //#endregion
@@ -392,9 +392,9 @@ websocket_server.on('connection', ws => {
             }
 
             case 1: {
-                if (!json.data) return ws.close(4005);
+                if (!json.d) return ws.close(4005);
 
-                ws.emit('data', json.data, ws);
+                ws.emit('data', json.d, ws);
                 return;
             }
 
