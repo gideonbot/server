@@ -82,16 +82,26 @@ function GetDiscordStats() {
     return new Promise((resolve, reject) => {
         if (!gideon_ws) return reject('Gideon unavailable');
 
-        let timer = setTimeout(() => reject('Timeout'), 1000);
+        let timer = null;
 
-        gideon_ws.send(JSON.stringify({op: 1, data: {type: 'REQUEST_STATS'}}));
-
-        gideon_ws.on('data', data => {
+        let handler = data => {
             if (data.type == 'STATS') {
+                gideon_ws.off('data', handler);
                 clearTimeout(timer);
-                resolve(data.d);
+                
+                delete data.type;
+
+                resolve(data);
             }
-        });
+        };
+
+        timer = setTimeout(() => {
+            gideon_ws.off('data', handler);
+            reject('Timeout');
+        }, 1000);
+
+        gideon_ws.on('data', handler);
+        gideon_ws.send(JSON.stringify({op: 1, d: {type: 'REQUEST_STATS'}}));
     });
 }
 //#endregion
