@@ -404,7 +404,7 @@ websocket_server.on('connection', ws => {
             case 1: {
                 if (!json.d) return ws.close(4005);
 
-                ws.emit('data', json.d, ws);
+                ws.emit('data', json.d);
                 return;
             }
 
