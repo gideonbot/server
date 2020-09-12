@@ -80,6 +80,12 @@ class Util {
         return res.status(code).set('Content-Type', 'application/json').send(JSON.stringify(obj, null, pretty ? 2 : 0));
     }
 
+    static GetJSON(str) {
+        if (!str || typeof(str) != 'string') return null;
+        try { return JSON.parse(str); }
+        catch (ex) { return null; }
+    }
+
     /**
      * @returns {Promise<number>}
      * @param {string} host 

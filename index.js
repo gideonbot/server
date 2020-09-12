@@ -2,6 +2,7 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const Constants = require('./constants');
+const { Controller } = require('request-controller');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 const DiscordOauth2 = require('discord-oauth2');
@@ -11,8 +12,9 @@ const fs = require('fs');
 const git = require('git-last-commit');
 const http = require('http');
 const rateLimit = require('express-rate-limit');
-const { Controller } = require('request-controller');
 const Util = require('./Util');
+const url = require('url');
+const ws = require('ws');
 //#endregion
 
 //#region Variables
@@ -25,6 +27,8 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const redirect = 'http://localhost:80/discord/callback';
 
+const websocket_server = new ws.Server({noServer: true, clientTracking: true});
+let gideon_ws = null;
 let http_server = http.createServer(app);
 //#endregion
 
@@ -63,6 +67,43 @@ function LogStart() {
         else Util.log(`Server starting, commit \`#${commit.shortHash}\` by \`${commit.committer.name}\`:\n\`${commit.subject}\`\nhttps://${hostname}`);
     });
 }
+
+http_server.on('upgrade', Upgrade);
+
+function Upgrade(request, socket, head) {
+    const pathname = url.parse(request.url).pathname;
+
+    if (pathname != '/ws') return socket.destroy();
+
+    websocket_server.handleUpgrade(request, socket, head, ws => websocket_server.emit('connection', ws));
+}
+
+function GetDiscordStats() {
+    return new Promise((resolve, reject) => {
+        if (!gideon_ws) return reject('Gideon unavailable');
+
+        let timer = null;
+
+        let handler = data => {
+            if (data.type == 'STATS') {
+                gideon_ws.off('data', handler);
+                clearTimeout(timer);
+                
+                delete data.type;
+
+                resolve(data);
+            }
+        };
+
+        timer = setTimeout(() => {
+            gideon_ws.off('data', handler);
+            reject('Timeout');
+        }, 1000);
+
+        gideon_ws.on('data', handler);
+        gideon_ws.send(JSON.stringify({op: 1, d: {type: 'REQUEST_STATS'}}));
+    });
+}
 //#endregion
 
 //#region Init
@@ -91,7 +132,7 @@ app.use((req, res, next) => {
 
 if (!process.env.CI) {
     const controller = new Controller({
-        whitelisted_ips: ['167.172.130.67', '167.172.138.127'],
+        whitelisted_ips: ['167.99.153.39'],
         ban_threshold_count: 100,
         ban_threshold_time: 45,
         file_path: __dirname,
@@ -176,6 +217,21 @@ app.get('/discord/callback', async (req, res) => {
     res.redirect('/');
 });
 
+let discord_stats = null;
+
+app.get('/api/discord/stats', (req, res) => {
+    if (discord_stats) return Util.SendResponse(res, 200, discord_stats);
+
+    GetDiscordStats().then(data => {
+        discord_stats = data;
+        setTimeout(() => discord_stats = null, 60e3);
+        Util.SendResponse(res, 200, discord_stats);
+    }, failed => {
+        console.log(failed);
+        Util.SendResponse(res, 500);
+    });
+});
+
 app.post('/api/github', (req, res) => {
     const secret = process.env.GITHUB_SECRET;
     if (!secret) return Util.SendResponse(res, 501);
@@ -223,14 +279,6 @@ app.post('/api/github', (req, res) => {
     }
 });
 
-app.post('/api/selfhost', (req, res) => {
-    let body = req.body;
-    if (!body || !body.user || !body.guilds || !Array.isArray(body.guilds)) return Util.SendResponse(res, 400);
-
-    Util.SendResponse(res, 204);
-    Util.log(`Bot logged:\n\nTag: \`${body.user}\`\nGuilds: \`\`\`\n${body.guilds.join('\n')}\n\`\`\``);
-});
-
 app.put('/api/invite', (req, res) => {
     let key = req.query.key;
 
@@ -261,7 +309,7 @@ app.all('*', (req, res) => Util.SendResponse(res, req.method == 'GET' || req.met
 
 app.use((error, req, res, next) => {
     Util.log('An error occurred while serving `' + req.path + '` to ' + Util.IPFromRequest(req) + ': ' + error.stack);
-    Util.SendResponse(res, error.stack.toLowerCase().includes('JSON.parse') || error.stack.toLowerCase().includes('URIError') ? 400 : 500);
+    Util.SendResponse(res, error.stack.toLowerCase().includes('json.parse') || error.stack.toLowerCase().includes('urierror') ? 400 : 500);
     next();
 });
 //#endregion
@@ -283,5 +331,100 @@ process.on('unhandledRejection', err => {
         console.log('Unhandled Rejection detected, marking as failed');
         process.exit(1);
     }
+});
+//#endregion
+
+//#region WS
+websocket_server.on('error', e => Util.log(e));
+
+websocket_server.on('connection', ws => {
+    //close codes
+    //4000 general close code (should be avoided)
+    //4001 invalid request/JSON
+    //4002 invalid opcode
+    //4003 auth failed
+    //4004 no heartbeat
+    //4005 malformed request
+    //4006 unauthorized
+
+    //op codes
+    //0 [send & receive] login/welcome
+    //1 [send & receive] data
+    //2 [send & receive] heartbeat
+    //3 [send] heartbeat ack
+    
+    setTimeout(() => {
+        //disconnect after 0.75s if not authorized
+        if (ws.readyState != ws.OPEN || ws.authorized) return;
+        ws.close(4003);
+    }, 750);
+
+    let timer = null;
+
+    function StartHeartbeat() {
+        timer = setInterval(Heartbeat, 15e3);
+    }
+
+    function Heartbeat() {
+        if (ws.readyState == ws.OPEN) {
+            if (ws.lastPing && !ws.lastPong) return ws.close(4004);
+
+            let diff = Math.abs(ws.lastPong - ws.lastPing);
+            if (diff >= 5e3) return ws.close(4004);
+
+            ws.send(JSON.stringify({op: 2}));
+            ws.lastPing = new Date();
+        }
+    }
+
+    ws.on('message', d => {
+        let json = Util.GetJSON(d);
+        if (!json || json.op == undefined) return ws.close(4001);
+
+        if (json.op != 0 && !ws.authorized) return ws.close(4006);
+
+        switch (json.op) {
+            case 0: {
+                if (ws.authorized) return;
+
+                let token = json.token;
+                if (!token) return ws.close(4005);
+
+                if (!config.api_keys.includes(json.token)) return ws.close(4003);
+
+                ws.authorized = true;
+                ws.send(JSON.stringify({op: 0}));
+
+                gideon_ws = ws;
+                StartHeartbeat();
+
+                return;
+            }
+
+            case 1: {
+                if (!json.d) return ws.close(4005);
+
+                ws.emit('data', json.d);
+                return;
+            }
+
+            case 2: {
+                ws.lastPong = new Date();
+
+                return ws.send(JSON.stringify({op: 3}));
+            }
+
+            default: return ws.close(4002);
+        }
+    });
+
+    ws.on('close', (code, reason) => {
+        clearTimeout(timer);
+        console.log('WS disconnected: ' + code + (reason ? ' (' + reason + ')' : ''));
+        gideon_ws = null;
+    });
+
+    ws.on('error', e => console.log(e));
+    ws.on('unexpected-response', () => console.log('Unexpected response!'));
 });
 //#endregion
