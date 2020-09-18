@@ -163,7 +163,7 @@ const apiLimiter = rateLimit({
 });
 
 app.use(cookieParser());
-app.use('/', express.static('public'));
+app.use('/', express.static('public', {extensions: ['html']}));
 app.use('/api/', apiLimiter);
 app.use(bodyParser.json());
 
