@@ -1,5 +1,5 @@
-const Discord = require('discord.js');
 const config = require('./config.json');
+const Webhook = require('discord-webhooks');
 
 class Util {
     constructor() {
@@ -12,7 +12,7 @@ class Util {
 
     /**
      * Log to a webhook
-     * @param {string | Discord.MessageEmbed} message 
+     * @param {string} message 
      */
     static log(message) {
         if (!message) return false;
@@ -27,15 +27,10 @@ class Util {
 
         if (split.length < 2) return false;
 
-        let client = new Discord.WebhookClient(split[0], split[1]);
+        let client = new Webhook(split[0], split[1]);
 
-        if (typeof(message) == 'string') {
-            for (let msg of Discord.Util.splitMessage(message, { maxLength: 1980 })) {
-                client.send(msg, { avatarURL: Util.config.avatar, username: 'Express-Logs' });
-            }
-        }
-
-        else client.send(null, { embeds: [message], avatarURL: Util.config.avatar, username: 'Express-Logs' });
+        if (typeof(message) == 'string') client.send(message, { avatar: Util.config.avatar, username: 'Express-Logs' });
+        else client.send({ embeds: [message], avatar: Util.config.avatar, username: 'Express-Logs' });
         
         return true;
     }
