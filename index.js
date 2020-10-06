@@ -163,6 +163,7 @@ const apiLimiter = rateLimit({
 });
 
 app.use(cookieParser());
+app.use('/img', express.static('public/img', {maxAge: 86400000}));
 app.use('/', express.static('public', {extensions: ['html']}));
 app.use('/api/', apiLimiter);
 app.use(bodyParser.json());
