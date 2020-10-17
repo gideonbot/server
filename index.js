@@ -129,7 +129,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
 if (!process.env.CI) {
     const controller = new Controller({
         whitelisted_ips: ['167.99.153.39'],
@@ -163,6 +162,7 @@ const apiLimiter = rateLimit({
 });
 
 app.use(cookieParser());
+app.use('/img', express.static('public/img', {maxAge: 86400000}));
 app.use('/', express.static('public', {extensions: ['html']}));
 app.use('/api/', apiLimiter);
 app.use(bodyParser.json());
@@ -315,7 +315,7 @@ app.use((error, req, res, next) => {
 });
 //#endregion
 
-//#region Error handling
+//#region Process
 process.on('uncaughtException', err => {
     Util.log('Uncaught Exception: ' + err.stack);
 
@@ -332,6 +332,18 @@ process.on('unhandledRejection', err => {
         console.log('Unhandled Rejection detected, marking as failed');
         process.exit(1);
     }
+});
+
+process.once('SIGUSR2', () => {
+    console.log('Shutting down...');
+
+    gideon_ws = null;
+    websocket_server.clients.forEach(x => x.close(1012));
+    websocket_server.close(e => console.log(e));
+    http_server.close(e => console.log(e));
+
+    console.log('Killing process...');
+    process.kill(process.pid, 'SIGUSR2');
 });
 //#endregion
 
