@@ -435,7 +435,7 @@ module.exports.API = {
 
 module.exports.TheBoys = [
     {quote: "I'll tell you who you are, you're a moron. _Translucent_ doesn't even mean _invisible_, it means _semi-transparent_.", author: "William Butcher", img: "https://imgix.ranker.com/user_node_img/50098/1001941889/original/billy-butcher-photo-u2?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
-    {quote: "Just 'cause you fall on your ass doesn't mean you have to stay there.", author: "Hugh Campbell Jr.", img: "https://imgix.ranker.com/user_node_img/50098/1001941897/original/hughie-campbell-photo-u2?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
+    {quote: "Just 'cause you fell on your ass doesn't mean you have to stay there.", author: "Hugh Campbell Jr.", img: "https://imgix.ranker.com/user_node_img/50098/1001941897/original/hughie-campbell-photo-u2?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
     {quote: "...", author: "Black Noir", img: "https://imgix.ranker.com/user_node_img/50098/1001941891/original/black-noir-photo-u2?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
     {quote: "See, people love that cozy feeling Supes give them... but if you knew half the shit they get up to... Fuckin' diabolical. But then, that's where I come in. To spank the bastards when they get out of line.", author: "William Butcher", img: "https://imgix.ranker.com/user_node_img/50098/1001941889/original/billy-butcher-photo-u2?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
     {quote: "If I'm gonna make a difference, I just feel more comfortable doing it on a smaller scale. I'm a motherfucker with a heart.", author: "Marvin T. Milk", img: "https://imgix.ranker.com/user_node_img/50098/1001941899/original/mother_s-milk-photo-u3?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
