@@ -185,6 +185,7 @@ app.get('/api/speedsters', (req, res) => Util.SendResponse(res, 200, Constants.S
 app.get('/api/abilities', (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
 app.get('/api/timeline', (req, res) => Util.SendResponse(res, 200, Constants.Timeline));
 app.get('/api/quotes/theboys', (req, res) => Util.SendResponse(res, 200, Constants.TheBoys));
+app.get('/api/trivia/theboys', (req, res) => Util.SendResponse(res, 200, Constants.TBTrivia));
 
 app.get('/invite', (req, res) => res.redirect(307, config.bot_invite)); //307 - we don't want caching
 app.get('/discord', (req, res) => res.redirect(307, config.discord_invite)); //307 - ^
