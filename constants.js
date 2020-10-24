@@ -586,7 +586,9 @@ module.exports.TheBoys = [
     {quote: "Turn around and walk away, A-Train", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
     {quote: "We're all alone. That's the truth.", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
     {quote: "Oh, gosh, moms. The gift that keeps on giving. Forever.", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
-    {quote: "If you jump ship and let the assholes steer, then you're part of the problem.", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"}
+    {quote: "If you jump ship and let the assholes steer, then you're part of the problem.", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
+    {quote: "Eat my shit you Nazi bitch.", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
+    {quote: "Fucking die, bitch.", author: "Annie January", img: "https://imgix.ranker.com/user_node_img/50098/1001946199/original/behind-the-scenes-photo-u1?fit=crop&fm=pjpg&q=60&w=650&dpr=2"},
 ];
 
 module.exports.TBTrivia = [
