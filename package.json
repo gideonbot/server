@@ -27,6 +27,7 @@
     "git-last-commit": "^1.0.0",
     "node-fetch": "^2.6.1",
     "request-controller": "github:gideonbot/request-controller",
+    "turndown": "^7.0.0",
     "ws": "^7.3.1"
   },
   "devDependencies": {

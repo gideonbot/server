@@ -13,6 +13,7 @@ const git = require('git-last-commit');
 const http = require('http');
 const fetch = require('node-fetch');
 const rateLimit = require('express-rate-limit');
+const turndown = require('turndown');
 const Util = require('./Util');
 const url = require('url');
 const ws = require('ws');
@@ -341,6 +342,7 @@ mdn.get('/', async (req, res) => {
 });
 
 mdn.get('/embed', async (req, res) => {
+    const td = new turndown();
     const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
@@ -356,7 +358,7 @@ mdn.get('/embed', async (req, res) => {
                 icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
                 url: 'https://developer.mozilla.org/',
             },
-            description: body.summary.replace(/<strong>/g, '').replace(/<\/strong>/g, '').replace(/<code>/g, '`').replace(/<\/code>/g, '`').replace(/<em>/g, '_').replace(/<\/em>/g, '_')
+            description: td.turndown(body.summary)
         }
         return Util.SendResponse(res, 200, embed);
     };
