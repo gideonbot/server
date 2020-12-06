@@ -356,7 +356,7 @@ mdn.get('/embed', async (req, res) => {
                 icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
                 url: 'https://developer.mozilla.org/',
             },
-            description: body.summary.replace(/<strong>/g, '').replace(/<\/strong>/g, '').replace(/<code>/g, '`').replace(/<\/code>/g, '`')
+            description: body.summary.replace(/<strong>/g, '').replace(/<\/strong>/g, '').replace(/<code>/g, '`').replace(/<\/code>/g, '`').replace(/<em>/g, '_').replace(/<\/em>/g, '_')
         }
         return Util.SendResponse(res, 200, embed);
     };
