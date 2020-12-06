@@ -96,7 +96,7 @@ class Util {
             if (host.includes(':')) {
                 let split = host.split(':');
                 if (split.length > 1) {
-                    host = split[0];fetch
+                    host = split[0];
                     if (!isNaN(split[split.length - 1])) port = Number(split[split.length - 1]); 
                 }
             }

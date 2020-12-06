@@ -21,6 +21,7 @@ const ws = require('ws');
 //#region Variables
 const oauth = new DiscordOauth2();
 const app = express();
+const mdn = express();
 const http_port = process.env.PORT || 80;
 const hostname = 'gideonbot.com';
 
@@ -112,6 +113,7 @@ LogStart();
 
 if (!process.env.CI) {
     http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
+    mdn.listen(process.env.MDN_PORT || 81);
     setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 }
 //#endregion
@@ -316,7 +318,6 @@ app.use((error, req, res, next) => {
     next();
 });
 
-const mdn = express();
 mdn.set('env', 'production');
 mdn.set('trust proxy', true);
 mdn.set('x-powered-by', false);
@@ -332,7 +333,7 @@ mdn.use((req, res, next) => {
 });
 
 mdn.get('/', async (req, res) => {
-    const query = req.query.q.replace(/#/g, '.'); 
+    const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
@@ -340,7 +341,7 @@ mdn.get('/', async (req, res) => {
 });
 
 mdn.get('/embed', async (req, res) => {
-    const query = req.query.q.replace(/#/g, '.'); 
+    const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
@@ -360,8 +361,6 @@ mdn.get('/embed', async (req, res) => {
         return Util.SendResponse(res, 200, embed);
     };
 });
-
-mdn.listen(process.env.MDN_PORT || 81);
 //#endregion
 
 //#region Process
