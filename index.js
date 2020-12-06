@@ -349,6 +349,10 @@ mdn.get('/embed', async (req, res) => {
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
 
     if (body) {
+        const desc = td.turndown(body.summary);
+        const match = desc.match(/\[(.*?)\]\((.*?)\)/); 
+        const regex = new RegExp(match[2], 'g');
+
         const embed = {
             color: '#2791D3',
             title: body.title,
@@ -358,7 +362,7 @@ mdn.get('/embed', async (req, res) => {
                 icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
                 url: 'https://developer.mozilla.org/',
             },
-            description: td.turndown(body.summary)
+            description: desc.replace(regex, 'https://developer.mozilla.org' + match[2])
         }
         return Util.SendResponse(res, 200, embed);
     };
