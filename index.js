@@ -11,6 +11,7 @@ const express = require('express');
 const fs = require('fs');
 const git = require('git-last-commit');
 const http = require('http');
+const fetch = require('node-fetch');
 const rateLimit = require('express-rate-limit');
 const Util = require('./Util');
 const url = require('url');
@@ -314,6 +315,53 @@ app.use((error, req, res, next) => {
     Util.SendResponse(res, error.stack.toLowerCase().includes('json.parse') || error.stack.toLowerCase().includes('urierror') ? 400 : 500);
     next();
 });
+
+const mdn = express();
+mdn.set('env', 'production');
+mdn.set('trust proxy', true);
+mdn.set('x-powered-by', false);
+
+mdn.use((req, res, next) => {
+    for (let key in req.query) {
+        if (Array.isArray(req.query[key])) {
+            let temp = req.query[key];
+            req.query[key] = temp[temp.length - 1];
+        }
+    }
+    next();
+});
+
+mdn.get('/', async (req, res) => {
+    const query = req.query.q.replace(/#/g, '.'); 
+    if (!query) return Util.SendResponse(res, 400);
+    const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
+    const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
+    if (body) return Util.SendResponse(res, 200, body);
+});
+
+mdn.get('/embed', async (req, res) => {
+    const query = req.query.q.replace(/#/g, '.'); 
+    if (!query) return Util.SendResponse(res, 400);
+    const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
+    const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
+
+    if (body) {
+        const embed = {
+            color: '#2791D3',
+            title: body.title,
+            url: 'https://developer.mozilla.org' + body.url,
+            author: {
+                name: 'MDN',
+                icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
+                url: 'https://developer.mozilla.org/',
+            },
+            description: body.summary.replace(/<strong>/g, '').replace(/<\/strong>/g, '').replace(/<code>/g, '`').replace(/<\/code>/g, '`')
+        }
+        return Util.SendResponse(res, 200, embed);
+    };
+});
+
+mdn.listen(process.env.MDN_PORT || 81);
 //#endregion
 
 //#region Process
