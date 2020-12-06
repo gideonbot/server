@@ -350,7 +350,7 @@ mdn.get('/embed', async (req, res) => {
         const embed = {
             color: '#2791D3',
             title: body.title,
-            url: 'https://developer.mozilla.org/' + encodeURIComponent(body.url),
+            url: 'https://developer.mozilla.org' + body.url,
             author: {
                 name: 'MDN',
                 icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
