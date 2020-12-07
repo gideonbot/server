@@ -369,7 +369,7 @@ mdn.get('/embed', async (req, res) => {
         const match = desc.match(/\[(.*?)\]\((.*?)\)/); 
 
         if (match) {
-            for (const matched of string.matchAll(/\[(.*?)\]\((.*?)\)/g)) {
+            for (const matched of desc.matchAll(/\[(.*?)\]\((.*?)\)/g)) {
                 desc = desc.replace(matched[2], 'https://developer.mozilla.org' + matched[2]);
             }
         }
