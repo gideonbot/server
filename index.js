@@ -17,6 +17,8 @@ const turndown = require('turndown');
 const Util = require('./Util');
 const url = require('url');
 const ws = require('ws');
+const embedcache = new Map();
+const jsoncache = new Map();
 //#endregion
 
 //#region Variables
@@ -336,15 +338,29 @@ mdn.use((req, res, next) => {
 mdn.get('/', async (req, res) => {
     const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
+
+    if (jsoncache.get(query)) {
+        return Util.SendResponse(res, 200, jsoncache.get(query));
+    }
+
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
-    if (body) return Util.SendResponse(res, 200, body);
+
+    if (body) {
+        jsoncache.set(query, body);
+        return Util.SendResponse(res, 200, body);
+    } 
 });
 
 mdn.get('/embed', async (req, res) => {
     const td = new turndown();
     const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
+
+    if (embedcache.get(query)) {
+        return Util.SendResponse(res, 200, embedcache.get(query));
+    }
+
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
 
@@ -368,6 +384,8 @@ mdn.get('/embed', async (req, res) => {
             },
             description: desc
         }
+
+        embedcache.set(query, embed);
         return Util.SendResponse(res, 200, embed);
     };
 });
