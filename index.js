@@ -344,6 +344,7 @@ mdn.get('/', async (req, res) => {
     }
 
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
+    // eslint-disable-next-line no-unused-vars
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
 
     if (body) {
@@ -362,10 +363,12 @@ mdn.get('/embed', async (req, res) => {
     }
 
     const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
+    // eslint-disable-next-line no-unused-vars
     const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
 
     if (body) {
-        let desc = td.turndown(body.summary);
+        let desc;
+        if (body.summary) desc = td.turndown(body.summary);
         const match = desc.match(/\[(.*?)\]\((.*?)\)/); 
 
         if (match) {
@@ -384,11 +387,11 @@ mdn.get('/embed', async (req, res) => {
                 url: 'https://developer.mozilla.org/',
             },
             description: desc
-        }
+        };
 
         embedcache.set(query, embed);
         return Util.SendResponse(res, 200, embed);
-    };
+    }
 });
 //#endregion
 
