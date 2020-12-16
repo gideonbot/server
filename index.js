@@ -201,7 +201,7 @@ app.get('/api/discord', (req, res) => Util.SendResponse(res, 200, {url: config.d
 app.all(/api\/dump/, (req, res) => Util.SendResponse(res, 200));
 
 app.get('/login', async (req, res) => {
-    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
+    res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
 });
 
 app.get('/discord/callback', async (req, res) => {
