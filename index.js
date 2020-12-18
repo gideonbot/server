@@ -11,15 +11,20 @@ const express = require('express');
 const fs = require('fs');
 const git = require('git-last-commit');
 const http = require('http');
+const fetch = require('node-fetch');
 const rateLimit = require('express-rate-limit');
+const turndown = require('turndown');
 const Util = require('./Util');
 const url = require('url');
 const ws = require('ws');
+const embedcache = new Map();
+const jsoncache = new Map();
 //#endregion
 
 //#region Variables
 const oauth = new DiscordOauth2();
 const app = express();
+const mdn = express();
 const http_port = process.env.PORT || 80;
 const hostname = 'gideonbot.com';
 
@@ -38,7 +43,7 @@ let config = {
     //pls don't store api keys like this, it is bad
     api_keys: [],
     discord_invite: 'https://discord.gg/h9SEQaU',
-    bot_invite: 'https://discordapp.com/oauth2/authorize?client_id=595328879397437463&permissions=37088320&scope=bot'
+    bot_invite: 'https://discord.com/oauth2/authorize?client_id=595328879397437463&permissions=37088320&scope=bot&scope=applications.commands'
 };
 
 InitConfig();
@@ -111,7 +116,8 @@ LogStart();
 
 if (!process.env.CI) {
     http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
-    setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
+    mdn.listen(process.env.MDN_PORT || 81);
+    //setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 }
 //#endregion
 
@@ -185,6 +191,7 @@ app.get('/api/speedsters', (req, res) => Util.SendResponse(res, 200, Constants.S
 app.get('/api/abilities', (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
 app.get('/api/timeline', (req, res) => Util.SendResponse(res, 200, Constants.Timeline));
 app.get('/api/quotes/theboys', (req, res) => Util.SendResponse(res, 200, Constants.TheBoys));
+app.get('/api/trivia/theboys', (req, res) => Util.SendResponse(res, 200, Constants.TBTrivia));
 
 app.get('/invite', (req, res) => res.redirect(307, config.bot_invite)); //307 - we don't want caching
 app.get('/discord', (req, res) => res.redirect(307, config.discord_invite)); //307 - ^
@@ -194,7 +201,7 @@ app.get('/api/discord', (req, res) => Util.SendResponse(res, 200, {url: config.d
 app.all(/api\/dump/, (req, res) => Util.SendResponse(res, 200));
 
 app.get('/login', async (req, res) => {
-    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
+    res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${encodeURIComponent(redirect)}`);
 });
 
 app.get('/discord/callback', async (req, res) => {
@@ -312,6 +319,79 @@ app.use((error, req, res, next) => {
     Util.log('An error occurred while serving `' + req.path + '` to ' + Util.IPFromRequest(req) + ': ' + error.stack);
     Util.SendResponse(res, error.stack.toLowerCase().includes('json.parse') || error.stack.toLowerCase().includes('urierror') ? 400 : 500);
     next();
+});
+
+mdn.set('env', 'production');
+mdn.set('trust proxy', true);
+mdn.set('x-powered-by', false);
+
+mdn.use((req, res, next) => {
+    for (let key in req.query) {
+        if (Array.isArray(req.query[key])) {
+            let temp = req.query[key];
+            req.query[key] = temp[temp.length - 1];
+        }
+    }
+    next();
+});
+
+mdn.get('/', async (req, res) => {
+    const query = (req.query.q || '').replace(/#/g, '.'); 
+    if (!query) return Util.SendResponse(res, 400);
+
+    if (jsoncache.get(query)) {
+        return Util.SendResponse(res, 200, jsoncache.get(query));
+    }
+
+    const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
+    // eslint-disable-next-line no-unused-vars
+    const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
+
+    if (body) {
+        jsoncache.set(query, body);
+        return Util.SendResponse(res, 200, body);
+    } 
+});
+
+mdn.get('/embed', async (req, res) => {
+    const td = new turndown();
+    const query = (req.query.q || '').replace(/#/g, '.'); 
+    if (!query) return Util.SendResponse(res, 400);
+
+    if (embedcache.get(query)) {
+        return Util.SendResponse(res, 200, embedcache.get(query));
+    }
+
+    const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
+    // eslint-disable-next-line no-unused-vars
+    const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
+
+    if (body) {
+        let desc;
+        if (body.summary) desc = td.turndown(body.summary);
+        const match = desc.match(/\[(.*?)\]\((.*?)\)/); 
+
+        if (match) {
+            for (const matched of desc.matchAll(/\[(.*?)\]\((.*?)\)/g)) {
+                desc = desc.replace(matched[2], 'https://developer.mozilla.org' + matched[2]);
+            }
+        }
+        
+        const embed = {
+            color: '#2791D3',
+            title: body.title,
+            url: 'https://developer.mozilla.org' + body.url,
+            author: {
+                name: 'MDN',
+                icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
+                url: 'https://developer.mozilla.org/',
+            },
+            description: desc
+        };
+
+        embedcache.set(query, embed);
+        return Util.SendResponse(res, 200, embed);
+    }
 });
 //#endregion
 
