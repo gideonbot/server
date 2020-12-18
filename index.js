@@ -117,7 +117,7 @@ LogStart();
 if (!process.env.CI) {
     http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
     mdn.listen(process.env.MDN_PORT || 81);
-    setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
+    //setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 }
 //#endregion
 
