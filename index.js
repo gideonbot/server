@@ -26,11 +26,13 @@ const oauth = new DiscordOauth2();
 const app = express();
 const mdn = express();
 const http_port = process.env.PORT || 80;
+const mdn_port = process.env.MDN_PORT || 81;
 const hostname = 'gideonbot.com';
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const redirect = 'http://localhost:80/discord/callback';
+const td = new turndown();
 
 const websocket_server = new ws.Server({noServer: true, clientTracking: true});
 let gideon_ws = null;
@@ -60,11 +62,11 @@ function WriteConfig() {
 //#endregion
 
 //#region Functions
-function CheckCertificate() {
+/*function CheckCertificate() {
     Util.GetCertExpirationDays(hostname).then(days => {
         if (days <= 4) Util.log('Certificate will expire in less than 4 days!');
     }, failed => Util.log('Failed to check certificate: ' + failed));
-}
+}*/
 
 function LogStart() {
     git.getLastCommit((err, commit) => {
@@ -109,6 +111,26 @@ function GetDiscordStats() {
         gideon_ws.send(JSON.stringify({op: 1, d: {type: 'REQUEST_STATS'}}));
     });
 }
+
+/**
+ * @param {string} query 
+ */
+async function GetJSONFromMDN(query) {
+    if (jsoncache.get(query)) {
+        return {result: jsoncache.get(query), cache: true};
+    }
+
+    const url = 'https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1';
+
+    const search = await fetch(url, { redirect: 'follow' }).catch(ex => Util.log(String(ex)));
+    if (!search || !search.url || search.url.trim() == 'https://developer.mozilla.org/en-US/') return {result: null, cache: false};
+
+    const body = await fetch(search.url + '/index.json').then(res => res.json()).catch(ex => Util.log(String(ex)));
+    if (!body) return {result: null, cache: false};
+
+    jsoncache.set(query, body.doc);
+    return {result: jsoncache.get(query), cache: false};
+}
 //#endregion
 
 //#region Init
@@ -116,7 +138,7 @@ LogStart();
 
 if (!process.env.CI) {
     http_server.listen(http_port, () => Util.log(`HTTP server listening on port \`${http_port}\``));
-    mdn.listen(process.env.MDN_PORT || 81);
+    mdn.listen(mdn_port, () => Util.log(`MDN server listening on port \`${mdn_port}\``));
     //setInterval(CheckCertificate, 1000 * 60 * 60 * 2);
 }
 //#endregion
@@ -125,6 +147,10 @@ if (!process.env.CI) {
 app.set('env', 'production');
 app.set('trust proxy', true);
 app.set('x-powered-by', false);
+
+mdn.set('env', 'production');
+mdn.set('trust proxy', true);
+mdn.set('x-powered-by', false);
 
 app.use((req, res, next) => {
     res.set('Referrer-Policy', 'same-origin');
@@ -313,17 +339,13 @@ app.put('/api/discord/invite', (req, res) => {
     Util.SendResponse(res, 204);
 });
 
-app.all('*', (req, res) => Util.SendResponse(res, req.method == 'GET' || req.method == 'HEAD' ? 404 : 405));
+app.all('*', (req, res) => Util.SendResponse(res, 404));
 
+// eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
     Util.log('An error occurred while serving `' + req.path + '` to ' + Util.IPFromRequest(req) + ': ' + error.stack);
     Util.SendResponse(res, error.stack.toLowerCase().includes('json.parse') || error.stack.toLowerCase().includes('urierror') ? 400 : 500);
-    next();
 });
-
-mdn.set('env', 'production');
-mdn.set('trust proxy', true);
-mdn.set('x-powered-by', false);
 
 mdn.use((req, res, next) => {
     for (let key in req.query) {
@@ -339,39 +361,33 @@ mdn.get('/', async (req, res) => {
     const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
 
-    if (jsoncache.get(query)) {
-        return Util.SendResponse(res, 200, jsoncache.get(query));
-    }
+    res.set('X-Cache', 'MISS');
 
-    const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
-    // eslint-disable-next-line no-unused-vars
-    const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
-
-    if (body) {
-        jsoncache.set(query, body);
-        return Util.SendResponse(res, 200, body);
-    } 
+    GetJSONFromMDN(query).then(response => {
+        if (response.cache) res.set('X-Cache', 'HIT');
+        Util.SendResponse(res, 200, response.result);
+    }).catch(() => Util.SendResponse(res, 404));
 });
 
 mdn.get('/embed', async (req, res) => {
-    const td = new turndown();
     const query = (req.query.q || '').replace(/#/g, '.'); 
     if (!query) return Util.SendResponse(res, 400);
 
+    res.set('X-Cache', 'MISS');
+
     if (embedcache.get(query)) {
+        res.set('X-Cache', 'HIT');
         return Util.SendResponse(res, 200, embedcache.get(query));
     }
 
-    const search = await fetch('https://api.duckduckgo.com/?q=%21%20site%3Adeveloper.mozilla.org%20' + query + '&format=json&pretty=1', { redirect: 'follow' }).catch(ex => Util.log(ex));
-    // eslint-disable-next-line no-unused-vars
-    const body = await fetch(search.url + '$children?expand').then(res => res.json()).catch(ex => { return Util.SendResponse(res, 404); });
+    GetJSONFromMDN(query).then(body => {
+        body = body.result;
+        
+        let desc = '';
 
-    if (body) {
-        let desc;
         if (body.summary) desc = td.turndown(body.summary);
-        const match = desc.match(/\[(.*?)\]\((.*?)\)/); 
-
-        if (match) {
+        
+        if (desc.match(/\[(.*?)\]\((.*?)\)/)) {
             for (const matched of desc.matchAll(/\[(.*?)\]\((.*?)\)/g)) {
                 desc = desc.replace(matched[2], 'https://developer.mozilla.org' + matched[2]);
             }
@@ -380,7 +396,7 @@ mdn.get('/embed', async (req, res) => {
         const embed = {
             color: '#2791D3',
             title: body.title,
-            url: 'https://developer.mozilla.org' + body.url,
+            url: 'https://developer.mozilla.org' + body.mdn_url,
             author: {
                 name: 'MDN',
                 icon_url: 'https://assets.stickpng.com/images/58480eb3cef1014c0b5e492a.png',
@@ -390,8 +406,16 @@ mdn.get('/embed', async (req, res) => {
         };
 
         embedcache.set(query, embed);
-        return Util.SendResponse(res, 200, embed);
-    }
+        Util.SendResponse(res, 200, embed);
+    }).catch(() => Util.SendResponse(res, 404));
+});
+
+mdn.all('*', (req, res) => Util.SendResponse(res, 404));
+
+// eslint-disable-next-line no-unused-vars
+mdn.use((error, req, res, next) => {
+    Util.log('An error occurred while serving `' + req.url + '`: ' + String(error));
+    Util.SendResponse(res, error.stack.toLowerCase().includes('json.parse') || error.stack.toLowerCase().includes('urierror') ? 400 : 500);
 });
 //#endregion
 
