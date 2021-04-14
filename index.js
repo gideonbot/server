@@ -504,10 +504,10 @@ websocket_server.on('connection', ws => {
             case 0: {
                 if (ws.authorized) return;
 
-                let token = json.token;
+                let token = json.d?.token;
                 if (!token) return ws.close(4005);
 
-                if (!config.api_keys.includes(json.token)) return ws.close(4003);
+                if (!config.api_keys.includes(token)) return ws.close(4003);
 
                 ws.authorized = true;
                 ws.send(JSON.stringify({op: 0}));
