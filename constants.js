@@ -118,7 +118,7 @@ module.exports.Quotees = [
     {title: 'Category:Caitlin_Snow_(Arrowverse)/Quotes'}
 ];
 
-modules.exports.Quotes = [
+module.exports.Quotes = [
     {
       "quote": "You saved the world, and then I saved you, with your pod. You're not the only bad-ass in the family.",
       "quotee": "Alexandra Danvers (Arrowverse: Earth-38)",
