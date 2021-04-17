@@ -5,6 +5,7 @@ export function SendResponse(res: Express.Response, code: number, obj?: object, 
 export function IPFromRequest(req: Express.Request): string;
 export function GetCertExpirationDays(host: string): Promise<number>;
 export function GetJSON(str: string): object;
+export function GenerateSnowflake(): string;
 
 interface Config {
     avatar: string;

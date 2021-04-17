@@ -81,6 +81,14 @@ class Util {
         catch (ex) { return null; }
     }
 
+    static GenerateSnowflake() {
+        let rv = '';
+        const possible = '1234567890';
+    
+        for (let i = 0; i < 20; i++) rv += possible.charAt(Math.floor(Math.random() * possible.length));
+        return rv;
+    }
+
     /**
      * @returns {Promise<number>}
      * @param {string} host 
