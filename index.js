@@ -213,6 +213,7 @@ app.use((req, res, next) => {
 app.get('/api/status', (req, res) => Util.SendResponse(res, 200, Constants.API));
 app.get('/api/soundtracks', (req, res) => Util.SendResponse(res, 200, Constants.Soundtracks));
 app.get('/api/quotes', (req, res) => Util.SendResponse(res, 200, Constants.Quotes));
+app.get('/api/quotees', (req, res) => Util.SendResponse(res, 200, Constants.Quotees));
 app.get('/api/speedsters', (req, res) => Util.SendResponse(res, 200, Constants.Speedsters));
 app.get('/api/abilities', (req, res) => Util.SendResponse(res, 200, Constants.Abilities));
 app.get('/api/timeline', (req, res) => Util.SendResponse(res, 200, Constants.Timeline));
