@@ -298,7 +298,7 @@ app.post('/api/github', (req, res) => {
             Util.log('CI build passed successfully for `' + repo + '`');
     
             let path = repo == 'server' ? './' : '../' + repo;
-            exec('sudo git stash & sudo git pull', {cwd: path}, error => {
+            exec('rm package-lock.json && git pull', {cwd: path}, error => {
                 if (error) Util.log('Error while syncing repo: ' + error);
             });
         }
